@@ -65,9 +65,17 @@ def update_branch(conn, branch_name, latest_commit):
     finally:
         cursor.close()
 
-conn = create_connection("localhost", "root", "arijit007", "myvcs")
-
-if conn:
-    print("Connection successful!")#works
-else:
-    print("Failed to connect to MySQL.")
+def get_file_by_hash(conn, file_hash):
+    cursor = conn.cursor()
+    query = "SELECT * FROM files WHERE hash = %s"
+    try:
+        cursor.execute(query, (file_hash,))
+        file = cursor.fetchone()
+        if file:
+            print(f"File found: {file}")
+        else:
+            print("File not found.")
+    except Error as e:
+        print(f"Error: '{e}'")
+    finally:
+        cursor.close()
