@@ -153,6 +153,12 @@ def merge_branches_ui():
     except Exception as e:
         messagebox.showerror("Error", f"Failed to merge branches: {e}")
 
+def close_app():
+    """Close the application."""
+    if conn:
+        conn.close()
+    root.quit()
+
 root = tk.Tk()
 root.title("MyVCS GUI")
 
@@ -167,6 +173,6 @@ tk.Button(root, text="Get Branch Info", command=get_branch_info_ui).pack(fill=tk
 tk.Button(root, text="Delete File", command=delete_file_ui).pack(fill=tk.X)
 tk.Button(root, text="Delete Commit", command=delete_commit_ui).pack(fill=tk.X)
 tk.Button(root, text="Merge Branches", command=merge_branches_ui).pack(fill=tk.X)
-tk.Button(root, text="Exit", command=root.quit).pack(fill=tk.X)
+tk.Button(root, text="Exit", command=close_app).pack(fill=tk.X)
 
 root.mainloop()
