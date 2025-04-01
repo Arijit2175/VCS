@@ -35,3 +35,7 @@ def update_branch():
 def get_file_by_hash():
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
     get_file_by_hash(conn, file_hash)
+
+def get_commit_history():
+    branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    get_commit_history(conn, branch_name)
