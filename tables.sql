@@ -13,7 +13,8 @@ create table if not exists commits(
     message text not null,
     timestamp TIMESTAMP default CURRENT_TIMESTAMP,
     parent_commit varchar(40),
-    branch_name varchar(40) not null
+    branch_name varchar(100) not null,
+    foreign key (parent_commit) references commits(commit_hash)
 );
 
 create table if not exists branches(
