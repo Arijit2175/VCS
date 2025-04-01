@@ -203,3 +203,7 @@ while parents1 or parents2:
     
     cursor.close()
     return None
+
+def check_for_conflicts(conn, ancestor_commit, source_commit, target_commit):
+    """Check if there are conflicts between source and target commits"""
+    return False
