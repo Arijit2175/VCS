@@ -82,15 +82,22 @@ def create_branch(conn, branch_name, latest_commit):
 
 def update_branch(conn, branch_name, latest_commit):
     cursor = conn.cursor()
-    query = "UPDATE branches SET latest_commit = %s WHERE name = %s"
-    try:
-        cursor.execute(query, (latest_commit, branch_name))
-        conn.commit()
-        print("Branch updated successfully.")
-    except Error as e:
-        print(f"Error: '{e}'")
-    finally:
-        cursor.close()
+    query_check = "SELECT * FROM branches WHERE name = %s"
+    cursor.execute(query_check, (branch_name,))
+    existing_branch = cursor.fetchone()
+
+    if existing_branch:
+        query = "UPDATE branches SET latest_commit = %s WHERE name = %s"
+        try:
+            cursor.execute(query, (latest_commit, branch_name))
+            conn.commit()
+            print("Branch updated successfully.")
+        except Error as e:
+            print(f"Error: '{e}'")
+    else:
+        print(f"Branch '{branch_name}' does not exist. Update failed.")
+    
+    cursor.close()
 
 def get_file_by_hash(conn, file_hash):
     cursor = conn.cursor()
