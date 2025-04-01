@@ -79,3 +79,20 @@ def get_file_by_hash(conn, file_hash):
         print(f"Error: '{e}'")
     finally:
         cursor.close()
+
+def get_commit_history(conn, branch_name):
+    cursor = conn.cursor()
+    query = "SELECT commit_hash, message, timestamp FROM commits WHERE branch_name = %s ORDER BY timestamp ASC"
+    try:
+        cursor.execute(query, (branch_name,))
+        commits = cursor.fetchall()
+        if commits:
+            print(f"Commit history for branch '{branch_name}':")
+            for commit in commits:
+                print(f"Commit Hash: {commit[0]}, Message: {commit[1]}, Timestamp: {commit[2]}")
+        else:
+            print(f"No commits found for branch '{branch_name}'.")
+    except Error as e:
+        print(f"Error: '{e}'")
+    finally:
+        cursor.close()
