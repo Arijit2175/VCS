@@ -15,3 +15,10 @@ def add_file_ui():
     content = content_entry.get()
     add_file(conn, file_hash, content)
 
+def create_commit_ui():
+    commit_hash = commit_hash_entry.get()
+    message = commit_message_entry.get()
+    parent_commit = parent_commit_entry.get() or None
+    branch_name = commit_branch_entry.get()
+    create_commit(conn, commit_hash, message, parent_commit, branch_name)
+
