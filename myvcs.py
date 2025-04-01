@@ -16,3 +16,15 @@ def create_connection(host_name, user_name, user_password, db_name):
     except Error as e:
         print(f"Error: '{e}'")
     return conn
+
+def add_file(conn, file_hash, content):
+    cursor = conn.cursor()
+    query = "INSERT INTO files (hash, context) VALUES (%s, %s)"
+    try:
+        cursor.execute(query, (file_hash, content))
+        conn.commit()
+        print("File added successfully.")
+    except Error as e:
+        print(f"Error: '{e}'")
+    finally:
+        cursor.close()
