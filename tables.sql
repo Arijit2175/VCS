@@ -18,5 +18,5 @@ create table if not exists commits(
 
 create table if not exists branches(
     name varchar(50) primary key,
-    latest_commit varchar(40) 
+    latest_commit varchar(40)
 );
