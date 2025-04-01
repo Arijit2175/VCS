@@ -56,9 +56,14 @@ def update_branch_ui():
     latest_commit = simpledialog.askstring("Input", "Enter new latest commit hash:")
     myvcs.update_branch(conn, branch_name, latest_commit)
 
-def get_file_by_hash():
+def get_file_by_hash_ui():
+    """Retrieve a file from the VCS by its hash."""
+    if conn is None:
+        messagebox.showerror("Error", "No database connection")
+        return
+
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
-    get_file_by_hash(conn, file_hash)
+    myvcs.get_file_by_hash(conn, file_hash)
 
 def get_commit_history():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
