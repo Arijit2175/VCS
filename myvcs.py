@@ -248,28 +248,11 @@ def create_merge_commit(conn, source_commit, target_commit, branch_name):
 
     return merge_commit_hash
 
-conn = create_connection("localhost", "root", "", "myvcs")
+conn = create_connection("localhost", "root", "yourpassword", "database")
 
 if conn:
-    print("Connection successful!")
-
-
-    add_file(conn, "abcd1234hash", "Sample file content")
-
-    create_commit(conn, "commit1234", "Initial commit", None, "main")
-
-    create_branch(conn, "main", "commit1234")  
-    create_branch(conn, "feature1", "commit1234") 
-
-    update_branch(conn, "feature1", "commit1234")  
-
-    get_file_by_hash(conn, "abcd1234hash")
-    get_commit_history(conn, "main")
-    get_branch_info(conn, "feature1")
-
-    delete_file(conn, "abcd1234hash")
-    delete_commit(conn, "commit1234")
-
-    merge_branches(conn, "feature1", "main")
+    
 else:
-    print("Failed to connect to MySQL.")
+ 
+
+conn.close()
