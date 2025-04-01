@@ -7,7 +7,7 @@ conn = None
 def connect_db():
     """Connect to MySQL database."""
     global conn
-    conn = myvcs.create_connection("localhost", "root", "arijit007", "myvcs")
+    conn = myvcs.create_connection("localhost", "root", "", "myvcs")
     if conn:
         messagebox.showinfo("Success", "Connected to Database")
     else:
@@ -72,7 +72,7 @@ def update_branch_ui():
         messagebox.showerror("Error", f"Failed to update branch: {e}")
 
 def get_file_by_hash_ui():
-    """Retrieve a file from the VCS by its hash and show the content in a messagebox."""
+    """Retrieve a file from the VCS by its hash and display it in a messagebox."""
     if conn is None:
         messagebox.showerror("Error", "No database connection")
         return
@@ -81,7 +81,18 @@ def get_file_by_hash_ui():
     try:
         content = myvcs.get_file_by_hash(conn, file_hash)
         if content:
-            messagebox.showinfo("File Content", f"Content: {content}")
+            content_str = str(content)
+
+            file_window = tk.Toplevel(root)
+            file_window.title(f"File Content: {file_hash}")
+            file_window.geometry("600x400")  
+            
+            text_widget = tk.Text(file_window, wrap=tk.WORD)
+            text_widget.insert(tk.END, content_str)
+            text_widget.pack(expand=True, fill=tk.BOTH)
+
+            text_widget.config(state=tk.DISABLED)
+
         else:
             messagebox.showerror("Error", "File not found")
     except Exception as e:
