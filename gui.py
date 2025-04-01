@@ -43,3 +43,7 @@ def get_commit_history():
 def get_branch_info():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     get_branch_info(conn, branch_name)
+
+def delete_file():
+    file_hash = simpledialog.askstring("Input", "Enter file hash to delete:")
+    delete_file(conn, file_hash)
