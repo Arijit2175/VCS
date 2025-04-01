@@ -61,15 +61,24 @@ def create_commit(conn, commit_hash, message, parent_commit, branch_name):
 
 def create_branch(conn, branch_name, latest_commit):
     cursor = conn.cursor()
-    query = "INSERT INTO branches (name, latest_commit) VALUES (%s, %s)"
-    try:
-        cursor.execute(query, (branch_name, latest_commit))
-        conn.commit()
-        print("Branch created successfully.")
-    except Error as e:
-        print(f"Error: '{e}'")
-    finally:
-        cursor.close()
+
+    # Check if the branch already exists in the 'branches' table
+    query_check = "SELECT * FROM branches WHERE name = %s"
+    cursor.execute(query_check, (branch_name,))
+    existing_branch = cursor.fetchone()
+
+    if existing_branch:
+        print(f"Branch with name '{branch_name}' already exists. Skipping insert.")
+    else:
+        query = "INSERT INTO branches (name, latest_commit) VALUES (%s, %s)"
+        try:
+            cursor.execute(query, (branch_name, latest_commit))
+            conn.commit()
+            print("Branch created successfully.")
+        except Error as e:
+            print(f"Error: '{e}'")
+    
+    cursor.close()
 
 def update_branch(conn, branch_name, latest_commit):
     cursor = conn.cursor()
@@ -244,5 +253,6 @@ if conn:
     print("Connection successful!")
     add_file(conn, "abcd1234hash", "Sample file content")
     create_commit(conn, "commit1234", "Initial commit", None, "main")
+    update_branch(conn, "feature1", "commit1234")
 else:
     print("Failed to connect to MySQL.")
