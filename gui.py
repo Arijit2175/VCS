@@ -4,3 +4,9 @@ from myvcs import create_connection, add_file, create_commit, create_branch, upd
 
 def connect_db():
     global conn
+    conn = create_connection("localhost", "root", "password", "vcs_db")
+    if conn:
+        messagebox.showinfo("Success", "Connected to Database")
+    else:
+        messagebox.showerror("Error", "Failed to Connect")
+
