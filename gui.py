@@ -24,15 +24,17 @@ def add_file_ui():
     content = simpledialog.askstring("Input", "Enter file content:")
     myvcs.add_file(conn, file_hash, content)
 
-def create_commit():
+def create_commit_ui():
+    """Create a commit in the VCS."""
+    if conn is None:
+        messagebox.showerror("Error", "No database connection")
+        return
+
     commit_hash = simpledialog.askstring("Input", "Enter commit hash:")
     message = simpledialog.askstring("Input", "Enter commit message:")
     parent_commit = simpledialog.askstring("Input", "Enter parent commit (or leave blank):")
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
-    if conn:
-        create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
-    else:
-        messagebox.showerror("Error", "No database connection")
+    myvcs.create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
 
 def create_branch():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
