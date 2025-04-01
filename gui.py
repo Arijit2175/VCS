@@ -114,7 +114,7 @@ def update_branch_ui():
         messagebox.showerror("Error", f"Failed to update branch: {e}")
 
 def get_file_by_hash_ui():
-    """Retrieve a file from the VCS by its hash and display it in a messagebox."""
+    """Retrieve a file from the VCS by its hash and display it in a new window."""
     if conn is None:
         messagebox.showerror("Error", "No database connection")
         return
@@ -127,17 +127,17 @@ def get_file_by_hash_ui():
     try:
         content = myvcs.get_file_by_hash(conn, file_hash)
         if content:
-            content_str = f"Hash: {content[0]}, Content: {content[1]}"
+            file_content = content[1]  
 
             file_window = tk.Toplevel(root)
             file_window.title(f"File Content: {file_hash}")
             file_window.geometry("600x400")  
             
             text_widget = tk.Text(file_window, wrap=tk.WORD)
-            text_widget.insert(tk.END, content_str)
+            text_widget.insert(tk.END, file_content)  
             text_widget.pack(expand=True, fill=tk.BOTH)
 
-            text_widget.config(state=tk.DISABLED)
+            text_widget.config(state=tk.DISABLED)  
         else:
             messagebox.showerror("Error", "File not found")
     except Exception as e:
