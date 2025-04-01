@@ -59,3 +59,16 @@ def merge_branches():
 
 root = tk.Tk()
 root.title("MyVCS GUI")
+
+tk.Button(root, text="Add File", command=add_file).pack(fill=tk.X)
+tk.Button(root, text="Create Commit", command=create_commit).pack(fill=tk.X)
+tk.Button(root, text="Create Branch", command=create_branch).pack(fill=tk.X)
+tk.Button(root, text="Update Branch", command=update_branch).pack(fill=tk.X)
+tk.Button(root, text="Get File by Hash", command=get_file_by_hash).pack(fill=tk.X)
+tk.Button(root, text="Get Commit History", command=get_commit_history).pack(fill=tk.X)
+tk.Button(root, text="Get Branch Info", command=get_branch_info).pack(fill=tk.X)
+tk.Button(root, text="Delete File", command=delete_file).pack(fill=tk.X)
+tk.Button(root, text="Delete Commit", command=delete_commit).pack(fill=tk.X)
+tk.Button(root, text="Merge Branches", command=merge_branches).pack(fill=tk.X)
+
+tk.Button(root, text="Exit", command=root.quit).pack(fill=tk.X)
