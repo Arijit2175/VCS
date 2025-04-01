@@ -71,6 +71,12 @@ def create_branch_ui():
         messagebox.showerror("Error", "Branch name cannot be empty.")
         return
 
+    if latest_commit:
+        commit_info = myvcs.get_commit_history(conn, branch_name) 
+        if not commit_info:
+            messagebox.showerror("Error", f"Latest commit '{latest_commit}' does not exist.")
+            return
+
     try:
         success = myvcs.create_branch(conn, branch_name, latest_commit)
         if success:
