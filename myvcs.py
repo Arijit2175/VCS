@@ -137,4 +137,18 @@ def delete_commit(conn, commit_hash):
         cursor.close()
 
 def merge_branches(conn, source_branch, target_branch):
-    
+    cursor = conn.cursor()
+
+    query = "SELECT latest_commit FROM branches WHERE name = %s"
+    cursor.execute(query, (source_branch,)
+    source_commit = cursor.fetchone()
+    cursor.execute(query, (target_branch,))
+    target_commit = cursor.fetchone(
+
+    if not source_commit or not target_commit:
+        print("One or both branches not found.")
+        cursor.close()
+        return;
+
+    source_commit_hash = source_commit[0]
+    target_commit_hash = target_commit[0];
