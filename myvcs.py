@@ -96,3 +96,6 @@ def get_commit_history(conn, branch_name):
         print(f"Error: '{e}'")
     finally:
         cursor.close()
+
+def get_branch_info(conn, branch_name):
+    
