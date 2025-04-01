@@ -111,4 +111,16 @@ def get_branch_info(conn, branch_name):
         print(f"Error: '{e}'")
     finally:
         cursor.close()
+
+def delete_file(conn, file_hash):
+    cursor = conn.cursor()
+    query = "DELETE FROM files WHERE hash = %s"
+    try:
+        cursor.execute(query, (file_hash,))
+        conn.commit()
+        print("File deleted successfully.")
+    except Error as e:
+        print(f"Error: '{e}'")
+    finally:
+        cursor.close()
     
