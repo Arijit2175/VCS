@@ -99,7 +99,7 @@ def get_file_by_hash_ui():
         messagebox.showerror("Error", f"Failed to retrieve file: {e}")
 
 def get_commit_history_ui():
-    """Get commit history of a branch."""
+    """Get commit history of a branch and display it in a pop-up window."""
     if conn is None:
         messagebox.showerror("Error", "No database connection")
         return
@@ -107,7 +107,22 @@ def get_commit_history_ui():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     try:
         history = myvcs.get_commit_history(conn, branch_name)
-        messagebox.showinfo("Commit History", "\n".join(history) if history else "No commits found")
+        if history:
+            history_str = "\n".join(history)
+
+            history_window = tk.Toplevel(root)
+            history_window.title(f"Commit History: {branch_name}")
+            history_window.geometry("600x400") 
+            
+            text_widget = tk.Text(history_window, wrap=tk.WORD)
+            text_widget.insert(tk.END, history_str)
+            text_widget.pack(expand=True, fill=tk.BOTH)
+
+            text_widget.config(state=tk.DISABLED)
+
+        else:
+            messagebox.showinfo("Commit History", "No commits found for this branch")
+
     except Exception as e:
         messagebox.showerror("Error", f"Failed to get commit history: {e}")
 
