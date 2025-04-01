@@ -31,3 +31,7 @@ def update_branch():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     latest_commit = simpledialog.askstring("Input", "Enter new latest commit hash:")
     update_branch(conn, branch_name, latest_commit)
+
+def get_file_by_hash():
+    file_hash = simpledialog.askstring("Input", "Enter file hash:")
+    get_file_by_hash(conn, file_hash)
