@@ -21,9 +21,16 @@ def add_file_ui():
 
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
     content = simpledialog.askstring("Input", "Enter file content:")
+    if not file_hash or not content:
+        messagebox.showerror("Error", "File hash and content cannot be empty.")
+        return
+
     try:
-        myvcs.add_file(conn, file_hash, content)
-        messagebox.showinfo("Success", "File added successfully!")
+        success = myvcs.add_file(conn, file_hash, content)
+        if success:
+            messagebox.showinfo("Success", "File added successfully!")
+        else:
+            messagebox.showerror("Error", "File with this hash already exists.")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to add file: {e}")
 
@@ -37,9 +44,17 @@ def create_commit_ui():
     message = simpledialog.askstring("Input", "Enter commit message:")
     parent_commit = simpledialog.askstring("Input", "Enter parent commit (or leave blank):")
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    
+    if not commit_hash or not message or not branch_name:
+        messagebox.showerror("Error", "Commit hash, message, and branch name cannot be empty.")
+        return
+
     try:
-        myvcs.create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
-        messagebox.showinfo("Success", "Commit created successfully!")
+        success = myvcs.create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
+        if success:
+            messagebox.showinfo("Success", "Commit created successfully!")
+        else:
+            messagebox.showerror("Error", "Commit with this hash already exists.")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to create commit: {e}")
 
@@ -51,9 +66,17 @@ def create_branch_ui():
 
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     latest_commit = simpledialog.askstring("Input", "Enter latest commit hash:")
+    
+    if not branch_name:
+        messagebox.showerror("Error", "Branch name cannot be empty.")
+        return
+
     try:
-        myvcs.create_branch(conn, branch_name, latest_commit)
-        messagebox.showinfo("Success", "Branch created successfully!")
+        success = myvcs.create_branch(conn, branch_name, latest_commit)
+        if success:
+            messagebox.showinfo("Success", "Branch created successfully!")
+        else:
+            messagebox.showerror("Error", "Branch with this name already exists.")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to create branch: {e}")
 
@@ -65,9 +88,17 @@ def update_branch_ui():
 
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     latest_commit = simpledialog.askstring("Input", "Enter new latest commit hash:")
+    
+    if not branch_name or not latest_commit:
+        messagebox.showerror("Error", "Branch name and latest commit cannot be empty.")
+        return
+
     try:
-        myvcs.update_branch(conn, branch_name, latest_commit)
-        messagebox.showinfo("Success", "Branch updated successfully!")
+        success = myvcs.update_branch(conn, branch_name, latest_commit)
+        if success:
+            messagebox.showinfo("Success", "Branch updated successfully!")
+        else:
+            messagebox.showerror("Error", "Branch not found.")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to update branch: {e}")
 
@@ -78,10 +109,14 @@ def get_file_by_hash_ui():
         return
 
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
+    if not file_hash:
+        messagebox.showerror("Error", "File hash cannot be empty.")
+        return
+
     try:
         content = myvcs.get_file_by_hash(conn, file_hash)
         if content:
-            content_str = str(content)
+            content_str = f"Hash: {content[0]}, Content: {content[1]}"
 
             file_window = tk.Toplevel(root)
             file_window.title(f"File Content: {file_hash}")
@@ -92,7 +127,6 @@ def get_file_by_hash_ui():
             text_widget.pack(expand=True, fill=tk.BOTH)
 
             text_widget.config(state=tk.DISABLED)
-
         else:
             messagebox.showerror("Error", "File not found")
     except Exception as e:
@@ -105,10 +139,14 @@ def get_commit_history_ui():
         return
 
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    if not branch_name:
+        messagebox.showerror("Error", "Branch name cannot be empty.")
+        return
+
     try:
         history = myvcs.get_commit_history(conn, branch_name)
         if history:
-            history_str = "\n".join(history)
+            history_str = "\n".join(f"Commit Hash: {commit[0]}, Message: {commit[1]}, Timestamp: {commit[2]}" for commit in history)
 
             history_window = tk.Toplevel(root)
             history_window.title(f"Commit History: {branch_name}")
@@ -119,10 +157,8 @@ def get_commit_history_ui():
             text_widget.pack(expand=True, fill=tk.BOTH)
 
             text_widget.config(state=tk.DISABLED)
-
         else:
             messagebox.showinfo("Commit History", "No commits found for this branch")
-
     except Exception as e:
         messagebox.showerror("Error", f"Failed to get commit history: {e}")
 
@@ -133,10 +169,14 @@ def get_branch_info_ui():
         return
 
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    if not branch_name:
+        messagebox.showerror("Error", "Branch name cannot be empty.")
+        return
+
     try:
         info = myvcs.get_branch_info(conn, branch_name)
         if info:
-            info_str = "\n".join(f"{key}: {value}" for key, value in info.items())
+            info_str = f"Branch Name: {info[0]}\nLatest Commit: {info[1]}"
 
             info_window = tk.Toplevel(root)
             info_window.title(f"Branch Info: {branch_name}")
@@ -147,10 +187,8 @@ def get_branch_info_ui():
             text_widget.pack(expand=True, fill=tk.BOTH)
 
             text_widget.config(state=tk.DISABLED)
-
         else:
             messagebox.showinfo("Branch Info", "No branch found with that name")
-
     except Exception as e:
         messagebox.showerror("Error", f"Failed to get branch info: {e}")
 
@@ -161,9 +199,16 @@ def delete_file_ui():
         return
 
     file_hash = simpledialog.askstring("Input", "Enter file hash to delete:")
+    if not file_hash:
+        messagebox.showerror("Error", "File hash cannot be empty.")
+        return
+
     try:
-        myvcs.delete_file(conn, file_hash)
-        messagebox.showinfo("Success", "File deleted successfully!")
+        success = myvcs.delete_file(conn, file_hash)
+        if success:
+            messagebox.showinfo("Success", "File deleted successfully!")
+        else:
+            messagebox.showerror("Error", "File not found.")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to delete file: {e}")
 
@@ -174,9 +219,16 @@ def delete_commit_ui():
         return
 
     commit_hash = simpledialog.askstring("Input", "Enter commit hash to delete:")
+    if not commit_hash:
+        messagebox.showerror("Error", "Commit hash cannot be empty.")
+        return
+
     try:
-        myvcs.delete_commit(conn, commit_hash)
-        messagebox.showinfo("Success", "Commit deleted successfully!")
+        success = myvcs.delete_commit(conn, commit_hash)
+        if success:
+            messagebox.showinfo("Success", "Commit deleted successfully!")
+        else:
+            messagebox.showerror("Error", "Commit not found.")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to delete commit: {e}")
 
@@ -188,6 +240,10 @@ def merge_branches_ui():
 
     source_branch = simpledialog.askstring("Input", "Enter source branch name:")
     target_branch = simpledialog.askstring("Input", "Enter target branch name:")
+    
+    if not source_branch or not target_branch:
+        messagebox.showerror("Error", "Both source and target branch names cannot be empty.")
+        return
 
     try:
         source_info = myvcs.get_branch_info(conn, source_branch)
