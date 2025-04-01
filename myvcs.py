@@ -98,4 +98,17 @@ def get_commit_history(conn, branch_name):
         cursor.close()
 
 def get_branch_info(conn, branch_name):
+    cursor = conn.cursor()
+    query = "SELECT name, latest_commit FROM branches WHERE name = %s"
+    try:
+        cursor.execute(query, (branch_name,))
+        branch = cursor.fetchone()
+        if branch:
+            print(f"Branch: {branch[0]}, Latest Commit: {branch[1]}")
+        else:
+            print("Branch not found.")
+    except Error as e:
+        print(f"Error: '{e}'")
+    finally:
+        cursor.close()
     
