@@ -65,20 +65,9 @@ def update_branch(conn, branch_name, latest_commit):
     finally:
         cursor.close()
 
-# Establish connection
-conn = create_connection("localhost", "root", "yourpassword", "myvcs")
+conn = create_connection("localhost", "root", "arijit007", "myvcs")
 
-# Add a file
-add_file(conn, "abcd1234hash", "Sample file content")
-
-# Create a commit
-create_commit(conn, "commit_hash_123", "Initial commit", None, "main")
-
-# Create a branch
-create_branch(conn, "main", "commit_hash_123")
-
-# Update the branch with a new commit
-update_branch(conn, "main", "commit_hash_124")
-
-# Close connection
-conn.close()
+if conn:
+    print("Connection successful!")
+else:
+    print("Failed to connect to MySQL.")
