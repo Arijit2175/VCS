@@ -83,9 +83,14 @@ def get_branch_info_ui():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     myvcs.get_branch_info(conn, branch_name)
 
-def delete_file():
+def delete_file_ui():
+    """Delete a file from the VCS."""
+    if conn is None:
+        messagebox.showerror("Error", "No database connection")
+        return
+
     file_hash = simpledialog.askstring("Input", "Enter file hash to delete:")
-    delete_file(conn, file_hash)
+    myvcs.delete_file(conn, file_hash)
 
 def delete_commit():
     commit_hash = simpledialog.askstring("Input", "Enter commit hash to delete:")
