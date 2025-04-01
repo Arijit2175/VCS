@@ -10,3 +10,8 @@ def connect_db():
     else:
         messagebox.showerror("Error", "Failed to Connect")
 
+def add_file_ui():
+    file_hash = file_hash_entry.get()
+    content = content_entry.get()
+    add_file(conn, file_hash, content)
+
