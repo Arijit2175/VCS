@@ -72,16 +72,16 @@ def update_branch_ui():
         messagebox.showerror("Error", f"Failed to update branch: {e}")
 
 def get_file_by_hash_ui():
-    """Retrieve a file from the VCS by its hash."""
+    """Retrieve a file from the VCS by its hash and show the content in a messagebox."""
     if conn is None:
         messagebox.showerror("Error", "No database connection")
         return
 
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
     try:
-        context = myvcs.get_file_by_hash(conn, file_hash)
-        if context:
-            messagebox.showinfo("File Content", f"Content: {context}")
+        content = myvcs.get_file_by_hash(conn, file_hash)
+        if content:
+            messagebox.showinfo("File Content", f"Content: {content}")
         else:
             messagebox.showerror("Error", "File not found")
     except Exception as e:
