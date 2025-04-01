@@ -51,3 +51,8 @@ def delete_file():
 def delete_commit():
     commit_hash = simpledialog.askstring("Input", "Enter commit hash to delete:")
     delete_commit(conn, commit_hash)
+
+def merge_branches():
+    source_branch = simpledialog.askstring("Input", "Enter source branch name:")
+    target_branch = simpledialog.askstring("Input", "Enter target branch name:")
+    merge_branches(conn, source_branch, target_branch)
