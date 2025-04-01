@@ -54,13 +54,13 @@ def create_branch(conn, branch_name, latest_commit):
         cursor.close()
 
 def update_branch(conn, branch_name, latest_commit):
-    cursor = conn.cursor(
+    cursor = conn.cursor()
     query = "UPDATE branches SET latest_commit = %s WHERE name = %s"
     try:
         cursor.execute(query, (latest_commit, branch_name))
         conn.commit()
         print("Branch updated successfully.")
     except Error as e:
-        print(f"Error: '{e}'"
+        print(f"Error: '{e}'")
     finally:
         cursor.close()
