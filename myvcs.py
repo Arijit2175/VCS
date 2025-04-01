@@ -171,3 +171,7 @@ def merge_branches(conn, source_branch, target_branch):
     
     merge_commit_hash = create_merge_commit(conn, source_commit_hash, target_commit_hash, target_branch)
     print(f"Merge commit created: {merge_commit_hash}")
+
+    update_branch(conn, target_branch, merge_commit_hash)
+    
+    cursor.close()
