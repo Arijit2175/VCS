@@ -28,3 +28,16 @@ def add_file(conn, file_hash, content):
         print(f"Error: '{e}'")
     finally:
         cursor.close()
+
+def create_commit(conn, commit_hash, message, parent_commit, branch_name):
+    cursor = conn.cursor()
+    query = "INSERT INTO commits (commit_hash, message, parent_commit, branch_name) VALUES (%s, %s, %s, %s)"
+    try:
+        cursor.execute(query, (commit_hash, message, parent_commit, branch_name))
+        conn.commit()
+        print("Commit created successfully.")
+    except Error as e:
+        print(f"Error: '{e}'")
+    finally:
+        cursor.close()
+
