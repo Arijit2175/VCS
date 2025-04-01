@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
-from myvcs import create_connection, add_file, create_commit, create_branch, update_branch, get_file_by_hash, get_commit_history, get_branch_info, delete_file, delete_commit, merge_branches
+from tkinter import simpledialog
+from myvcs import (create_connection, add_file, create_commit, create_branch, update_branch, get_file_by_hash, get_commit_history, get_branch_info, delete_file, delete_commit, merge_branches)
 
 def connect_db():
     global conn
@@ -10,17 +11,23 @@ def connect_db():
     else:
         messagebox.showerror("Error", "Failed to Connect")
 
-def add_file_ui():
-    file_hash = file_hash_entry.get()
-    content = content_entry.get()
-    add_file(conn, file_hash, content)
+def add_file():
+    file_hash = simpledialog.askstring("Input", "Enter file hash:")
+    content = simpledialog.askstring("Input", "Enter file content:")
+    if conn:
+        add_file(conn, file_hash, content)
+    else:
+        messagebox.showerror("Error", "No database connection")
 
-def create_commit_ui():
-    commit_hash = commit_hash_entry.get()
-    message = commit_message_entry.get()
-    parent_commit = parent_commit_entry.get() or None
-    branch_name = commit_branch_entry.get()
-    create_commit(conn, commit_hash, message, parent_commit, branch_name)
+def create_commit():
+    commit_hash = simpledialog.askstring("Input", "Enter commit hash:")
+    message = simpledialog.askstring("Input", "Enter commit message:")
+    parent_commit = simpledialog.askstring("Input", "Enter parent commit (or leave blank):")
+    branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    if conn:
+        create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
+    else:
+        messagebox.showerror("Error", "No database connection")
 
 def create_branch():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
