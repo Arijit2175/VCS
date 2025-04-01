@@ -56,3 +56,6 @@ def merge_branches():
     source_branch = simpledialog.askstring("Input", "Enter source branch name:")
     target_branch = simpledialog.askstring("Input", "Enter target branch name:")
     merge_branches(conn, source_branch, target_branch)
+
+root = tk.Tk()
+root.title("MyVCS GUI")
