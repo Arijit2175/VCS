@@ -1,11 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import simpledialog
-from myvcs import (create_connection, add_file, create_commit, create_branch, update_branch, get_file_by_hash, get_commit_history, get_branch_info, delete_file, delete_commit, merge_branches)
+import myvcs 
+
+conn = None
 
 def connect_db():
+    """Connect to the MySQL database."""
     global conn
-    conn = create_connection("localhost", "root", "password", "vcs_db")
+    conn = myvcs.create_connection("localhost", "root", "password", "vcs_db")
     if conn:
         messagebox.showinfo("Success", "Connected to Database")
     else:
