@@ -123,4 +123,15 @@ def delete_file(conn, file_hash):
         print(f"Error: '{e}'")
     finally:
         cursor.close()
-    
+
+def delete_commit(conn, commit_hash):
+    cursor = conn.cursor()
+    query = "DELETE FROM commits WHERE commit_hash = %s"
+    try:
+        cursor.execute(query, (commit_hash,))
+        conn.commit()
+        print("Commit deleted successfully.")
+    except Error as e:
+        print(f"Error: '{e}'")
+    finally:
+        cursor.close()
