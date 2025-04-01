@@ -175,4 +175,5 @@ tk.Button(root, text="Delete Commit", command=delete_commit_ui).pack(fill=tk.X)
 tk.Button(root, text="Merge Branches", command=merge_branches_ui).pack(fill=tk.X)
 tk.Button(root, text="Exit", command=close_app).pack(fill=tk.X)
 
+#testing
 root.mainloop()
