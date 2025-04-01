@@ -46,10 +46,15 @@ def create_branch_ui():
     latest_commit = simpledialog.askstring("Input", "Enter latest commit hash:")
     myvcs.create_branch(conn, branch_name, latest_commit)
 
-def update_branch():
+def update_branch_ui():
+    """Update a branch to a new commit."""
+    if conn is None:
+        messagebox.showerror("Error", "No database connection")
+        return
+
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     latest_commit = simpledialog.askstring("Input", "Enter new latest commit hash:")
-    update_branch(conn, branch_name, latest_commit)
+    myvcs.update_branch(conn, branch_name, latest_commit)
 
 def get_file_by_hash():
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
