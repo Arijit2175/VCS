@@ -65,9 +65,14 @@ def get_file_by_hash_ui():
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
     myvcs.get_file_by_hash(conn, file_hash)
 
-def get_commit_history():
+def get_commit_history_ui():
+    """Get commit history of a branch."""
+    if conn is None:
+        messagebox.showerror("Error", "No database connection")
+        return
+
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
-    get_commit_history(conn, branch_name)
+    myvcs.get_commit_history(conn, branch_name)
 
 def get_branch_info():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
