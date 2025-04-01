@@ -1,12 +1,11 @@
 import tkinter as tk
-from tkinter import messagebox
-from tkinter import simpledialog
-import myvcs 
+from tkinter import messagebox, simpledialog
+import myvcs  
 
-conn = None
+conn = None  
 
 def connect_db():
-    """Connect to the MySQL database."""
+    """Connect to MySQL database."""
     global conn
     conn = myvcs.create_connection("localhost", "root", "password", "vcs_db")
     if conn:
@@ -22,7 +21,11 @@ def add_file_ui():
 
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
     content = simpledialog.askstring("Input", "Enter file content:")
-    myvcs.add_file(conn, file_hash, content)
+    try:
+        myvcs.add_file(conn, file_hash, content)
+        messagebox.showinfo("Success", "File added successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to add file: {e}")
 
 def create_commit_ui():
     """Create a commit in the VCS."""
@@ -34,7 +37,11 @@ def create_commit_ui():
     message = simpledialog.askstring("Input", "Enter commit message:")
     parent_commit = simpledialog.askstring("Input", "Enter parent commit (or leave blank):")
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
-    myvcs.create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
+    try:
+        myvcs.create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
+        messagebox.showinfo("Success", "Commit created successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to create commit: {e}")
 
 def create_branch_ui():
     """Create a new branch."""
@@ -44,7 +51,11 @@ def create_branch_ui():
 
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     latest_commit = simpledialog.askstring("Input", "Enter latest commit hash:")
-    myvcs.create_branch(conn, branch_name, latest_commit)
+    try:
+        myvcs.create_branch(conn, branch_name, latest_commit)
+        messagebox.showinfo("Success", "Branch created successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to create branch: {e}")
 
 def update_branch_ui():
     """Update a branch to a new commit."""
@@ -54,7 +65,11 @@ def update_branch_ui():
 
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     latest_commit = simpledialog.askstring("Input", "Enter new latest commit hash:")
-    myvcs.update_branch(conn, branch_name, latest_commit)
+    try:
+        myvcs.update_branch(conn, branch_name, latest_commit)
+        messagebox.showinfo("Success", "Branch updated successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to update branch: {e}")
 
 def get_file_by_hash_ui():
     """Retrieve a file from the VCS by its hash."""
@@ -63,7 +78,14 @@ def get_file_by_hash_ui():
         return
 
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
-    myvcs.get_file_by_hash(conn, file_hash)
+    try:
+        content = myvcs.get_file_by_hash(conn, file_hash)
+        if content:
+            messagebox.showinfo("File Content", f"Content: {content}")
+        else:
+            messagebox.showerror("Error", "File not found")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to retrieve file: {e}")
 
 def get_commit_history_ui():
     """Get commit history of a branch."""
@@ -72,7 +94,11 @@ def get_commit_history_ui():
         return
 
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
-    myvcs.get_commit_history(conn, branch_name)
+    try:
+        history = myvcs.get_commit_history(conn, branch_name)
+        messagebox.showinfo("Commit History", "\n".join(history) if history else "No commits found")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to get commit history: {e}")
 
 def get_branch_info_ui():
     """Get details about a branch."""
@@ -81,7 +107,11 @@ def get_branch_info_ui():
         return
 
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
-    myvcs.get_branch_info(conn, branch_name)
+    try:
+        info = myvcs.get_branch_info(conn, branch_name)
+        messagebox.showinfo("Branch Info", str(info) if info else "No branch found")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to get branch info: {e}")
 
 def delete_file_ui():
     """Delete a file from the VCS."""
@@ -90,7 +120,11 @@ def delete_file_ui():
         return
 
     file_hash = simpledialog.askstring("Input", "Enter file hash to delete:")
-    myvcs.delete_file(conn, file_hash)
+    try:
+        myvcs.delete_file(conn, file_hash)
+        messagebox.showinfo("Success", "File deleted successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to delete file: {e}")
 
 def delete_commit_ui():
     """Delete a commit from the VCS."""
@@ -99,7 +133,11 @@ def delete_commit_ui():
         return
 
     commit_hash = simpledialog.askstring("Input", "Enter commit hash to delete:")
-    myvcs.delete_commit(conn, commit_hash)
+    try:
+        myvcs.delete_commit(conn, commit_hash)
+        messagebox.showinfo("Success", "Commit deleted successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to delete commit: {e}")
 
 def merge_branches_ui():
     """Merge two branches in the VCS."""
@@ -109,7 +147,11 @@ def merge_branches_ui():
 
     source_branch = simpledialog.askstring("Input", "Enter source branch name:")
     target_branch = simpledialog.askstring("Input", "Enter target branch name:")
-    myvcs.merge_branches(conn, source_branch, target_branch)
+    try:
+        myvcs.merge_branches(conn, source_branch, target_branch)
+        messagebox.showinfo("Success", "Branches merged successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to merge branches: {e}")
 
 root = tk.Tk()
 root.title("MyVCS GUI")
