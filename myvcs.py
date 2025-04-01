@@ -51,4 +51,4 @@ def create_branch(conn, branch_name, latest_commit):
     except Error as e:
         print(f"Error: '{e}'")
     finally:
-        cursor.close(
+        cursor.close()
