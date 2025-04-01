@@ -22,3 +22,6 @@ create table if not exists branches(
     latest_commit varchar(40),
     foreign key (latest_commit) references commits(commit_hash) on delete set null
 );
+
+create index idx_files_hash on files(hash);
+create index idx_commits_branch_name on commits(branch_name);
