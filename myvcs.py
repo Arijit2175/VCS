@@ -31,7 +31,7 @@ def add_file(conn, file_hash, content):
             logging.info("File with this hash already exists. Skipping insert.")
             return False
 
-        query = "INSERT INTO files (hash, context) VALUES (%s, %s)"
+        query = "INSERT INTO files (hash, content) VALUES (%s, %s)"
         try:
             cursor.execute(query, (file_hash, content))
             conn.commit()
