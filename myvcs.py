@@ -68,6 +68,6 @@ def update_branch(conn, branch_name, latest_commit):
 conn = create_connection("localhost", "root", "arijit007", "myvcs")
 
 if conn:
-    print("Connection successful!")
+    print("Connection successful!")#works
 else:
     print("Failed to connect to MySQL.")
