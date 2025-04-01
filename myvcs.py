@@ -135,3 +135,6 @@ def delete_commit(conn, commit_hash):
         print(f"Error: '{e}'")
     finally:
         cursor.close()
+
+def merge_branches(conn, source_branch, target_branch):
+    
