@@ -162,9 +162,9 @@ def merge_branches(conn, source_branch, target_branch):
 
     print(f"Common ancestor commit: {common_ancestor_commit}")
 
-    conflicts = check_for_conflictsconn, common_ancestor_commit, source_commit_hash, target_commit_hash)
+    conflicts = check_for_conflicts(conn, common_ancestor_commit, source_commit_hash, target_commit_hash)
     
     if conflicts:
         print("Conflicts detected, need to resolve manually.")
-        cursor.close(
-        return;
+        cursor.close()
+        return
