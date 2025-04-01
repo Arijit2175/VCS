@@ -127,7 +127,7 @@ def get_commit_history_ui():
         messagebox.showerror("Error", f"Failed to get commit history: {e}")
 
 def get_branch_info_ui():
-    """Get details about a branch."""
+    """Get details about a branch and display it in a pop-up window."""
     if conn is None:
         messagebox.showerror("Error", "No database connection")
         return
@@ -135,7 +135,22 @@ def get_branch_info_ui():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     try:
         info = myvcs.get_branch_info(conn, branch_name)
-        messagebox.showinfo("Branch Info", str(info) if info else "No branch found")
+        if info:
+            info_str = "\n".join(f"{key}: {value}" for key, value in info.items())
+
+            info_window = tk.Toplevel(root)
+            info_window.title(f"Branch Info: {branch_name}")
+            info_window.geometry("500x300") 
+
+            text_widget = tk.Text(info_window, wrap=tk.WORD)
+            text_widget.insert(tk.END, info_str)
+            text_widget.pack(expand=True, fill=tk.BOTH)
+
+            text_widget.config(state=tk.DISABLED)
+
+        else:
+            messagebox.showinfo("Branch Info", "No branch found with that name")
+
     except Exception as e:
         messagebox.showerror("Error", f"Failed to get branch info: {e}")
 
