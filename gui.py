@@ -181,16 +181,29 @@ def delete_commit_ui():
         messagebox.showerror("Error", f"Failed to delete commit: {e}")
 
 def merge_branches_ui():
-    """Merge two branches in the VCS."""
+    """Merge two branches in the VCS after validating their existence."""
     if conn is None:
         messagebox.showerror("Error", "No database connection")
         return
 
     source_branch = simpledialog.askstring("Input", "Enter source branch name:")
     target_branch = simpledialog.askstring("Input", "Enter target branch name:")
+
     try:
+        source_info = myvcs.get_branch_info(conn, source_branch)
+        target_info = myvcs.get_branch_info(conn, target_branch)
+
+        if not source_info:
+            messagebox.showerror("Error", f"Source branch '{source_branch}' not found")
+            return
+
+        if not target_info:
+            messagebox.showerror("Error", f"Target branch '{target_branch}' not found")
+            return
+
         myvcs.merge_branches(conn, source_branch, target_branch)
         messagebox.showinfo("Success", "Branches merged successfully!")
+
     except Exception as e:
         messagebox.showerror("Error", f"Failed to merge branches: {e}")
 
