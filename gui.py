@@ -22,3 +22,9 @@ def create_commit_ui():
     branch_name = commit_branch_entry.get()
     create_commit(conn, commit_hash, message, parent_commit, branch_name)
 
+def create_branch():
+    branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    latest_commit = simpledialog.askstring("Input", "Enter latest commit hash:")
+    create_branch(conn, branch_name, latest_commit)
+
+
