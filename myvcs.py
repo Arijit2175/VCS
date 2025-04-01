@@ -175,3 +175,6 @@ def merge_branches(conn, source_branch, target_branch):
     update_branch(conn, target_branch, merge_commit_hash)
     
     cursor.close()
+
+def find_common_ancestor(conn, commit_hash1, commit_hash2):
+    
