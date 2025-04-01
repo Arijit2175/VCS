@@ -177,30 +177,31 @@ def merge_branches(conn, source_branch, target_branch):
     cursor.close()
 
 def find_common_ancestor(conn, commit_hash1, commit_hash2):
-     """Find the common ancestor of two commits"""
-cursor = conn.cursor()
-query = "SELECT parent_commit FROM commits WHERE commit_hash = %s"
+    """Find the common ancestor of two commits"""
+    cursor = conn.cursor()
+    query = "SELECT parent_commit FROM commits WHERE commit_hash = %s"
     
+    parents1 = [commit_hash1]
+    parents2 = [commit_hash2]
     
-parents1 = [commit_hash1]
-parents2 = [commit_hash2]
-    
-while parents1 or parents2:
-    if parents1:
-        cursor.execute(query, (parents1.pop(),))
-        parent1 = cursor.fetchone()
-        if parent1:
-            parents1.append(parent1[0])
+    while parents1 or parents2:
+        if parents1:
+            cursor.execute(query, (parents1.pop(),))
+            parent1 = cursor.fetchone()
+            if parent1:
+                parents1.append(parent1[0])
 
-    if parents2:
-        cursor.execute(query, (parents2.pop(),))
-        parent2 = cursor.fetchone()
-        if parent2:
-            parents2.append(parent2[0])
+        if parents2:
+            cursor.execute(query, (parents2.pop(),))
+            parent2 = cursor.fetchone()
+            if parent2:
+                parents2.append(parent2[0])
 
-    if set(parents1) & set(parents2): 
-        return list(set(parents1) & set(parents2))[0]
-    
+        common_ancestors = set(parents1) & set(parents2)
+        if common_ancestors:
+            cursor.close()
+            return common_ancestors.pop()  
+
     cursor.close()
     return None
 
