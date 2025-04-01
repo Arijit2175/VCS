@@ -7,7 +7,7 @@ conn = None
 def connect_db():
     """Connect to MySQL database."""
     global conn
-    conn = myvcs.create_connection("localhost", "root", "password", "vcs_db")
+    conn = myvcs.create_connection("localhost", "root", "arijit007", "myvcs")
     if conn:
         messagebox.showinfo("Success", "Connected to Database")
     else:
@@ -161,7 +161,7 @@ def close_app():
 
 root = tk.Tk()
 root.title("MyVCS GUI")
-root.geometry("300x400")
+root.geometry("400x600")
 root.resizable(True, True)
 
 frame = tk.Frame(root, padx=20, pady=10)
