@@ -19,8 +19,6 @@ def create_connection(host_name, user_name, user_password, db_name):
 
 def add_file(conn, file_hash, content):
     cursor = conn.cursor()
-
-    # Check if the file already exists in the 'files' table
     query_check = "SELECT * FROM files WHERE hash = %s"
     cursor.execute(query_check, (file_hash,))
     existing_file = cursor.fetchone()
@@ -28,7 +26,7 @@ def add_file(conn, file_hash, content):
     if existing_file:
         print("File with this hash already exists. Skipping insert.")
     else:
-        query = "INSERT INTO files (hash, content) VALUES (%s, %s)"
+        query = "INSERT INTO files (hash, context) VALUES (%s, %s)"
         try:
             cursor.execute(query, (file_hash, content))
             conn.commit()
@@ -40,8 +38,6 @@ def add_file(conn, file_hash, content):
 
 def create_commit(conn, commit_hash, message, parent_commit, branch_name):
     cursor = conn.cursor()
-
-    # Check if the commit already exists in the 'commits' table
     query_check = "SELECT * FROM commits WHERE commit_hash = %s"
     cursor.execute(query_check, (commit_hash,))
     existing_commit = cursor.fetchone()
@@ -61,8 +57,6 @@ def create_commit(conn, commit_hash, message, parent_commit, branch_name):
 
 def create_branch(conn, branch_name, latest_commit):
     cursor = conn.cursor()
-
-    # Check if the branch already exists in the 'branches' table
     query_check = "SELECT * FROM branches WHERE name = %s"
     cursor.execute(query_check, (branch_name,))
     existing_branch = cursor.fetchone()
@@ -258,8 +252,24 @@ conn = create_connection("localhost", "root", "", "myvcs")
 
 if conn:
     print("Connection successful!")
+
+
     add_file(conn, "abcd1234hash", "Sample file content")
+
     create_commit(conn, "commit1234", "Initial commit", None, "main")
-    update_branch(conn, "feature1", "commit1234")
+
+    create_branch(conn, "main", "commit1234")  
+    create_branch(conn, "feature1", "commit1234") 
+
+    update_branch(conn, "feature1", "commit1234")  
+
+    get_file_by_hash(conn, "abcd1234hash")
+    get_commit_history(conn, "main")
+    get_branch_info(conn, "feature1")
+
+    delete_file(conn, "abcd1234hash")
+    delete_commit(conn, "commit1234")
+
+    merge_branches(conn, "feature1", "main")
 else:
     print("Failed to connect to MySQL.")
