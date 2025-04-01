@@ -247,12 +247,3 @@ def create_merge_commit(conn, source_commit, target_commit, branch_name):
     cursor.close()
 
     return merge_commit_hash
-
-conn = create_connection("localhost", "root", "yourpassword", "database")
-
-if conn:
-    
-else:
- 
-
-conn.close()
