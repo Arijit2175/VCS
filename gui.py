@@ -79,9 +79,9 @@ def get_file_by_hash_ui():
 
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
     try:
-        content = myvcs.get_file_by_hash(conn, file_hash)
-        if content:
-            messagebox.showinfo("File Content", f"Content: {content}")
+        context = myvcs.get_file_by_hash(conn, file_hash)
+        if context:
+            messagebox.showinfo("File Content", f"Content: {context}")
         else:
             messagebox.showerror("Error", "File not found")
     except Exception as e:
