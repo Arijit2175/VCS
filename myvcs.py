@@ -41,3 +41,14 @@ def create_commit(conn, commit_hash, message, parent_commit, branch_name):
     finally:
         cursor.close()
 
+def create_branch(conn, branch_name, latest_commit):
+    cursor = conn.cursor()
+    query = "INSERT INTO branches (name, latest_commit) VALUES (%s, %s)"
+    try:
+        cursor.execute(query, (branch_name, latest_commit))
+        conn.commit()
+        print("Branch created successfully.")
+    except Error as e:
+        print(f"Error: '{e}'")
+    finally:
+        cursor.close(
