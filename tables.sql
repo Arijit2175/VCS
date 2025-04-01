@@ -4,7 +4,7 @@ USE myvcs;
 create table if not exists files(
     id int auto_increment primary key,
     hash varchar(40) unique not null,
-    context text not null
+    content text not null
 );
 
 create table if not exists commits(
@@ -18,5 +18,5 @@ create table if not exists commits(
 
 create table if not exists branches(
     name varchar(50) primary key,
-    latest_commit varchar(40)
+    foreign key (latest_commit) references commits(commit_hash)
 );
