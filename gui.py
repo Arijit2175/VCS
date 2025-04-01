@@ -14,13 +14,15 @@ def connect_db():
     else:
         messagebox.showerror("Error", "Failed to Connect")
 
-def add_file():
+def add_file_ui():
+    """Add a file to the VCS."""
+    if conn is None:
+        messagebox.showerror("Error", "No database connection")
+        return
+
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
     content = simpledialog.askstring("Input", "Enter file content:")
-    if conn:
-        add_file(conn, file_hash, content)
-    else:
-        messagebox.showerror("Error", "No database connection")
+    myvcs.add_file(conn, file_hash, content)
 
 def create_commit():
     commit_hash = simpledialog.askstring("Input", "Enter commit hash:")
