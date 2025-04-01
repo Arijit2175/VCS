@@ -207,3 +207,14 @@ while parents1 or parents2:
 def check_for_conflicts(conn, ancestor_commit, source_commit, target_commit):
     """Check if there are conflicts between source and target commits"""
     return False
+
+def create_merge_commit(conn, source_commit, target_commit, branch_name):
+    """Create a merge commit"""
+    merge_commit_hash = "merge_commit_hash_example" 
+    query = "INSERT INTO commits (commit_hash, message, parent_commit, branch_name) VALUES (%s, %s, %s, %s)"
+    cursor = conn.cursor()
+    cursor.execute(query, (merge_commit_hash, f"Merge {source_commit} into {target_commit}", source_commit, branch_name))
+    conn.commit()
+    cursor.close()
+
+    return merge_commit_hash
