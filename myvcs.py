@@ -52,3 +52,5 @@ def create_branch(conn, branch_name, latest_commit):
         print(f"Error: '{e}'")
     finally:
         cursor.close()
+
+def update_branch(conn, branch_name, latest_commit):
