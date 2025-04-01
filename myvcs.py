@@ -19,15 +19,24 @@ def create_connection(host_name, user_name, user_password, db_name):
 
 def add_file(conn, file_hash, content):
     cursor = conn.cursor()
-    query = "INSERT INTO files (hash, context) VALUES (%s, %s)"
-    try:
-        cursor.execute(query, (file_hash, content))
-        conn.commit()
-        print("File added successfully.")
-    except Error as e:
-        print(f"Error: '{e}'")
-    finally:
-        cursor.close()
+
+    # Check if the file already exists in the 'files' table
+    query_check = "SELECT * FROM files WHERE hash = %s"
+    cursor.execute(query_check, (file_hash,))
+    existing_file = cursor.fetchone()
+
+    if existing_file:
+        print("File with this hash already exists. Skipping insert.")
+    else:
+        query = "INSERT INTO files (hash, content) VALUES (%s, %s)"
+        try:
+            cursor.execute(query, (file_hash, content))
+            conn.commit()
+            print("File added successfully.")
+        except Error as e:
+            print(f"Error: '{e}'")
+    
+    cursor.close()
 
 def create_commit(conn, commit_hash, message, parent_commit, branch_name):
     cursor = conn.cursor()
@@ -219,3 +228,12 @@ def create_merge_commit(conn, source_commit, target_commit, branch_name):
     cursor.close()
 
     return merge_commit_hash
+
+conn = create_connection("localhost", "root", "", "myvcs")
+
+if conn:
+    print("Connection successful!")
+    add_file(conn, "abcd1234hash", "Sample file content")
+    create_commit(conn, "commit1234", "Initial commit", None, "main")
+else:
+    print("Failed to connect to MySQL.")
