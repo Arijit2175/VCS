@@ -153,11 +153,11 @@ def merge_branches(conn, source_branch, target_branch):
     source_commit_hash = source_commit[0]
     target_commit_hash = target_commit[0]
 
-    common_ancestor_commit = find_common_ancestor(conn, source_commit_hash, target_commit_hash
+    common_ancestor_commit = find_common_ancestor(conn, source_commit_hash, target_commit_hash)
 
     if not common_ancestor_commit:
         print("No common ancestor found, unable to merge.")
         cursor.close()
         return
 
-    print(f"Common ancestor commit: {common_ancestor_commit}"
+    print(f"Common ancestor commit: {common_ancestor_commit}")
