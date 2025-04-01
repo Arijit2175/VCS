@@ -1,6 +1,11 @@
 CREATE DATABASE IF NOT EXISTS myvcs;
 USE myvcs;
 
+CREATE TABLE IF NOT EXISTS files (
+    hash VARCHAR(64) PRIMARY KEY,
+    content TEXT NOT NULL
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS branches (
     name VARCHAR(50) PRIMARY KEY,
     latest_commit VARCHAR(64)
