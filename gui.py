@@ -36,10 +36,15 @@ def create_commit_ui():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     myvcs.create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
 
-def create_branch():
+def create_branch_ui():
+    """Create a new branch."""
+    if conn is None:
+        messagebox.showerror("Error", "No database connection")
+        return
+
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     latest_commit = simpledialog.askstring("Input", "Enter latest commit hash:")
-    create_branch(conn, branch_name, latest_commit)
+    myvcs.create_branch(conn, branch_name, latest_commit)
 
 def update_branch():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
