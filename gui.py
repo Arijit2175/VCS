@@ -101,10 +101,15 @@ def delete_commit_ui():
     commit_hash = simpledialog.askstring("Input", "Enter commit hash to delete:")
     myvcs.delete_commit(conn, commit_hash)
 
-def merge_branches():
+def merge_branches_ui():
+    """Merge two branches in the VCS."""
+    if conn is None:
+        messagebox.showerror("Error", "No database connection")
+        return
+
     source_branch = simpledialog.askstring("Input", "Enter source branch name:")
     target_branch = simpledialog.askstring("Input", "Enter target branch name:")
-    merge_branches(conn, source_branch, target_branch)
+    myvcs.merge_branches(conn, source_branch, target_branch)
 
 root = tk.Tk()
 root.title("MyVCS GUI")
