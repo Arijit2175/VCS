@@ -27,4 +27,7 @@ def create_branch():
     latest_commit = simpledialog.askstring("Input", "Enter latest commit hash:")
     create_branch(conn, branch_name, latest_commit)
 
-
+def update_branch():
+    branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    latest_commit = simpledialog.askstring("Input", "Enter new latest commit hash:")
+    update_branch(conn, branch_name, latest_commit)
