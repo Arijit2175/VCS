@@ -47,3 +47,7 @@ def get_branch_info():
 def delete_file():
     file_hash = simpledialog.askstring("Input", "Enter file hash to delete:")
     delete_file(conn, file_hash)
+
+def delete_commit():
+    commit_hash = simpledialog.askstring("Input", "Enter commit hash to delete:")
+    delete_commit(conn, commit_hash)
