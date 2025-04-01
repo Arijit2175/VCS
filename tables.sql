@@ -19,5 +19,6 @@ create table if not exists commits(
 
 create table if not exists branches(
     name varchar(50) primary key,
-    foreign key (latest_commit) references commits(commit_hash)
+    latest_commit varchar(40),
+    foreign key (latest_commit) references commits(commit_hash) on delete set null
 );
