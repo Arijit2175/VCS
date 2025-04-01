@@ -73,4 +73,4 @@ tk.Button(root, text="Merge Branches", command=merge_branches).pack(fill=tk.X)
                                                                     
 tk.Button(root, text="Exit", command=root.quit).pack(fill=tk.X)
 
-tk.mainloop()
+root.mainloop()
