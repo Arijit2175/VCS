@@ -39,3 +39,7 @@ def get_file_by_hash():
 def get_commit_history():
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
     get_commit_history(conn, branch_name)
+
+def get_branch_info():
+    branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    get_branch_info(conn, branch_name)
