@@ -70,5 +70,5 @@ tk.Button(root, text="Get Branch Info", command=get_branch_info).pack(fill=tk.X)
 tk.Button(root, text="Delete File", command=delete_file).pack(fill=tk.X)
 tk.Button(root, text="Delete Commit", command=delete_commit).pack(fill=tk.X)
 tk.Button(root, text="Merge Branches", command=merge_branches).pack(fill=tk.X)
-
+                                                                    
 tk.Button(root, text="Exit", command=root.quit).pack(fill=tk.X)
