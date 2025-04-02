@@ -17,6 +17,7 @@ def create_connection(host_name, user_name, user_password, db_name):
         )
         if conn.is_connected():
             logging.info("Connection established")
+            initialize_main_branch(conn)
     except Error as e:
         logging.error(f"Error: '{e}'")
     return conn
