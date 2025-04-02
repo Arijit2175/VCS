@@ -61,6 +61,26 @@ def create_commit(conn, commit_hash, message, parent_commit, branch_name):
             logging.error(f"Error: '{e}'")
             return False
 
+def initialize_main_branch(conn):
+    with conn.cursor() as cursor:
+        query_check = "SELECT * FROM branches WHERE name = 'main'"
+        cursor.execute(query_check)
+        existing_branch = cursor.fetchone()
+
+        if existing_branch:
+            logging.info("Main branch already exists. No need to create.")
+            return False
+
+        query = "INSERT INTO branches (name, latest_commit) VALUES ('main', NULL)"
+        try:
+            cursor.execute(query)
+            conn.commit()
+            logging.info("Main branch created successfully.")
+            return True
+        except Error as e:
+            logging.error(f"Error: '{e}'")
+            return False
+        
 def create_branch(conn, branch_name, latest_commit):
     with conn.cursor() as cursor:
         query_check = "SELECT * FROM branches WHERE name = %s"
