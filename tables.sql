@@ -17,8 +17,10 @@ CREATE TABLE IF NOT EXISTS commits (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     parent_commit VARCHAR(64),  
     branch_name VARCHAR(50) NOT NULL,
-    FOREIGN KEY (parent_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL,
-    FOREIGN KEY (branch_name) REFERENCES branches(name) ON DELETE CASCADE
+    FOREIGN KEY (parent_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL 
+        CONSTRAINT fk_commits_parent_commit,  
+    FOREIGN KEY (branch_name) REFERENCES branches(name) ON DELETE CASCADE 
+        CONSTRAINT fk_commits_branch_name      
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS branches (
