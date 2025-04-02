@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS commits (
 CREATE TABLE IF NOT EXISTS branches (
     name VARCHAR(50) PRIMARY KEY,
     latest_commit VARCHAR(64),
-    FOREIGN KEY (latest_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL
+    CONSTRAINT fk_branches_latest_commit FOREIGN KEY (latest_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE INDEX idx_files_hash ON files(hash);
