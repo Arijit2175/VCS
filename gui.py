@@ -49,6 +49,11 @@ def create_commit_ui():
         messagebox.showerror("Error", "Commit hash, message, and branch name cannot be empty.")
         return
 
+    branch_info = myvcs.get_branch_info(conn, branch_name)
+    if not branch_info:
+        messagebox.showerror("Error", f"Branch '{branch_name}' does not exist.")
+        return
+
     try:
         success = myvcs.create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
         if success:
