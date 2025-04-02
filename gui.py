@@ -96,6 +96,12 @@ def create_branch_ui():
     except Exception as e:
         messagebox.showerror("Error", f"Failed to create branch: {e}")
 
+def get_commit_info(conn, commit_hash):
+    """Check if a commit exists in the commits table."""
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM commits WHERE commit_hash = %s", (commit_hash,))
+    return cursor.fetchone() 
+
 def update_branch_ui():
     """Update a branch to a new commit."""
     if conn is None:
