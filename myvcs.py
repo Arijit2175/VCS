@@ -116,6 +116,12 @@ def get_file_by_hash(conn, file_hash):
         except Error as e:
             logging.error(f"Error: '{e}'")
             return None
+        
+def get_commit_info(conn, commit_hash):
+    """Check if a commit exists in the commits table."""
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM commits WHERE commit_hash = %s", (commit_hash,))
+    return cursor.fetchone() 
 
 def get_commit_history(conn, branch_name):
     with conn.cursor() as cursor:

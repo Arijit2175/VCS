@@ -82,8 +82,8 @@ def create_branch_ui():
         return
 
     if latest_commit:
-        commit_history = myvcs.get_commit_history(conn, latest_commit)  
-        if not commit_history:
+        commit_info = myvcs.get(conn, latest_commit)  
+        if not commit_info:
             messagebox.showerror("Error", f"Latest commit '{latest_commit}' does not exist.")
             return
 
@@ -95,12 +95,6 @@ def create_branch_ui():
             messagebox.showerror("Error", "Failed to create branch.")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to create branch: {e}")
-
-def get_commit_info(conn, commit_hash):
-    """Check if a commit exists in the commits table."""
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM commits WHERE commit_hash = %s", (commit_hash,))
-    return cursor.fetchone() 
 
 def update_branch_ui():
     """Update a branch to a new commit."""
