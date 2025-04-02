@@ -16,16 +16,20 @@ CREATE TABLE IF NOT EXISTS commits (
     message TEXT NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     parent_commit VARCHAR(64),  
-    branch_name VARCHAR(50) NOT NULL,
-    CONSTRAINT fk_commits_parent_commit FOREIGN KEY (parent_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL,
-    CONSTRAINT fk_commits_branch_name FOREIGN KEY (branch_name) REFERENCES branches(name) ON DELETE CASCADE
+    branch_name VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS branches (
     name VARCHAR(50) PRIMARY KEY,
-    latest_commit VARCHAR(64),
-    CONSTRAINT fk_branches_latest_commit FOREIGN KEY (latest_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL
+    latest_commit VARCHAR(64)
 ) ENGINE=InnoDB;
+
+ALTER TABLE commits
+    ADD CONSTRAINT fk_commits_parent_commit FOREIGN KEY (parent_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL,
+    ADD CONSTRAINT fk_commits_branch_name FOREIGN KEY (branch_name) REFERENCES branches(name) ON DELETE CASCADE;
+
+ALTER TABLE branches
+    ADD CONSTRAINT fk_branches_latest_commit FOREIGN KEY (latest_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL;
 
 CREATE INDEX idx_files_hash ON files(hash);
 CREATE INDEX idx_commits_branch_name ON commits(branch_name);
