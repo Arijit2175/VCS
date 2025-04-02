@@ -82,7 +82,7 @@ def create_branch_ui():
         return
 
     if latest_commit:
-        commit_info = myvcs.get(conn, latest_commit)  
+        commit_info = myvcs.get_commit_info(conn, latest_commit)  
         if not commit_info:
             messagebox.showerror("Error", f"Latest commit '{latest_commit}' does not exist.")
             return
