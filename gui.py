@@ -70,15 +70,20 @@ def create_branch_ui():
         return
 
     branch_name = simpledialog.askstring("Input", "Enter branch name:")
-    latest_commit = simpledialog.askstring("Input", "Enter latest commit hash:")
+    latest_commit = simpledialog.askstring("Input", "Enter latest commit hash (or leave blank):")
     
     if not branch_name:
         messagebox.showerror("Error", "Branch name cannot be empty.")
         return
 
+    existing_branch_info = myvcs.get_branch_info(conn, branch_name)
+    if existing_branch_info:
+        messagebox.showerror("Error", f"Branch '{branch_name}' already exists.")
+        return
+
     if latest_commit:
-        commit_info = myvcs.get_commit_history(conn, branch_name) 
-        if not commit_info:
+        commit_history = myvcs.get_commit_history(conn, latest_commit)  
+        if not commit_history:
             messagebox.showerror("Error", f"Latest commit '{latest_commit}' does not exist.")
             return
 
@@ -87,7 +92,7 @@ def create_branch_ui():
         if success:
             messagebox.showinfo("Success", "Branch created successfully!")
         else:
-            messagebox.showerror("Error", "Branch with this name already exists.")
+            messagebox.showerror("Error", "Failed to create branch.")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to create branch: {e}")
 
