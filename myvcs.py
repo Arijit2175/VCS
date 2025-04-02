@@ -71,7 +71,7 @@ def create_branch(conn, branch_name, latest_commit):
             logging.info(f"Branch with name '{branch_name}' already exists. Skipping insert.")
             return False
 
-        if latest_commit is not None:
+        if latest_commit:  
             query_commit_check = "SELECT * FROM commits WHERE commit_hash = %s"
             cursor.execute(query_commit_check, (latest_commit,))
             commit_exists = cursor.fetchone()
