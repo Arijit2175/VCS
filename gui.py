@@ -253,6 +253,9 @@ def delete_commit_ui():
     except Exception as e:
         messagebox.showerror("Error", f"Failed to delete commit: {e}")
 
+def delete_branch_ui():
+    """Delete a branch from the VCS."""
+
 def merge_branches_ui():
     """Merge two branches in the VCS after validating their existence."""
     if conn is None:
