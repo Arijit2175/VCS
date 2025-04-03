@@ -328,6 +328,7 @@ tk.Button(frame, text="Get Commit History", command=get_commit_history_ui).pack(
 tk.Button(frame, text="Get Branch Info", command=get_branch_info_ui).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Delete File", command=delete_file_ui).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Delete Commit", command=delete_commit_ui).pack(fill=tk.X, pady=5)
+tk.Button(frame, text="Delete Branch", command=delete_branch_ui).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Merge Branches", command=merge_branches_ui).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Exit", command=close_app).pack(fill=tk.X, pady=5)
 
