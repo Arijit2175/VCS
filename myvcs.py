@@ -219,6 +219,7 @@ def delete_commit(conn, commit_hash):
             logging.error(f"Error: '{e}'")
             return False
 
+def delete_branch(conn, branch_name):
 def merge_branches(conn, source_branch, target_branch):
     with conn.cursor() as cursor:
         query = "SELECT latest_commit FROM branches WHERE name = %s"
