@@ -255,6 +255,23 @@ def delete_commit_ui():
 
 def delete_branch_ui():
     """Delete a branch from the VCS."""
+    if conn is None:
+        messagebox.showerror("Error", "No database connection")
+        return
+
+    branch_name = simpledialog.askstring("Input", "Enter branch name to delete:")
+    if not branch_name:
+        messagebox.showerror("Error", "Branch name cannot be empty.")
+        return
+
+    try:
+        success = myvcs.delete_branch(conn, branch_name)
+        if success:
+            messagebox.showinfo("Success", f"Branch '{branch_name}' deleted successfully!")
+        else:
+            messagebox.showerror("Error", f"Branch '{branch_name}' not found or has associated commits.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to delete branch: {e}")
 
 def merge_branches_ui():
     """Merge two branches in the VCS after validating their existence."""
