@@ -7,7 +7,15 @@ conn = None
 def connect_db():
     """Connect to MySQL database."""
     global conn
-    conn = myvcs.create_connection("localhost", "root", "", "myvcs")
+
+    db_name = simpledialog.askstring("Input", "Enter database name:")
+    db_password = simpledialog.askstring("Input", "Enter database password:", show='*')
+
+    if not db_name:
+        messagebox.showerror("Error", "Database name cannot be empty.")
+        return
+
+    conn = myvcs.create_connection("localhost", "root", db_password, db_name)
     if conn:
         messagebox.showinfo("Success", "Connected to Database")
     else:
