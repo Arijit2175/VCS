@@ -220,6 +220,34 @@ def delete_commit(conn, commit_hash):
             return False
 
 def delete_branch(conn, branch_name):
+    """Delete a branch from the database."""
+    with conn.cursor() as cursor:
+        query_check = "SELECT * FROM branches WHERE name = %s"
+        cursor.execute(query_check, (branch_name,))
+        existing_branch = cursor.fetchone()
+
+        if not existing_branch:
+            logging.warning(f"Branch '{branch_name}' does not exist. Deletion failed.")
+            return False
+
+        query_commit_check = "SELECT * FROM commits WHERE branch_name = %s"
+        cursor.execute(query_commit_check, (branch_name,))
+        associated_commits = cursor.fetchall()
+
+        if associated_commits:
+            logging.warning(f"Branch '{branch_name}' has associated commits. Deletion failed.")
+            return False
+
+        query_delete = "DELETE FROM branches WHERE name = %s"
+        try:
+            cursor.execute(query_delete, (branch_name,))
+            conn.commit()
+            logging.info(f"Branch '{branch_name}' deleted successfully.")
+            return True
+        except Error as e:
+            logging.error(f"Error: '{e}'")
+            return False
+        
 def merge_branches(conn, source_branch, target_branch):
     with conn.cursor() as cursor:
         query = "SELECT latest_commit FROM branches WHERE name = %s"
