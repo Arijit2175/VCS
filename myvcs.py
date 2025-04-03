@@ -113,19 +113,27 @@ def create_branch(conn, branch_name, latest_commit):
 
 def update_branch(conn, branch_name, latest_commit):
     with conn.cursor() as cursor:
-        query_check = "SELECT * FROM branches WHERE name = %s"
-        cursor.execute(query_check, (branch_name,))
+        query_check_branch = "SELECT * FROM branches WHERE name = %s"
+        cursor.execute(query_check_branch, (branch_name,))
         existing_branch = cursor.fetchone()
 
         if existing_branch:
-            query = "UPDATE branches SET latest_commit = %s WHERE name = %s"
-            try:
-                cursor.execute(query, (latest_commit, branch_name))
-                conn.commit()
-                logging.info("Branch updated successfully.")
-                return True
-            except Error as e:
-                logging.error(f"Error: '{e}'")
+            query_check_commit = "SELECT * FROM commits WHERE commit_hash = %s"
+            cursor.execute(query_check_commit, (latest_commit,))
+            commit_exists = cursor.fetchone()
+
+            if commit_exists:
+                query_update = "UPDATE branches SET latest_commit = %s WHERE name = %s"
+                try:
+                    cursor.execute(query_update, (latest_commit, branch_name))
+                    conn.commit()
+                    logging.info("Branch updated successfully.")
+                    return True
+                except Error as e:
+                    logging.error(f"Error: '{e}'")
+                    return False
+            else:
+                logging.warning(f"Commit '{latest_commit}' does not exist. Update failed.")
                 return False
         else:
             logging.warning(f"Branch '{branch_name}' does not exist. Update failed.")
