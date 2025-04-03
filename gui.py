@@ -312,7 +312,7 @@ def close_app():
 
 root = tk.Tk()
 root.title("MyVCS GUI")
-root.geometry("400x500")
+root.geometry("400x600")
 root.resizable(True, True)
 
 frame = tk.Frame(root, padx=20, pady=10)
