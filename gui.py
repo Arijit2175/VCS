@@ -10,7 +10,7 @@ def connect_db():
 
     input_window = tk.Toplevel(root)
     input_window.title("Database Connection")
-    input_window.geometry("300x200")  
+    input_window.geometry("300x220")  
 
     tk.Label(input_window, text="Enter database name:").pack(pady=5)
     db_name_entry = tk.Entry(input_window, width=30)  
