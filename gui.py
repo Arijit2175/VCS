@@ -10,22 +10,27 @@ def connect_db():
 
     input_window = tk.Toplevel(root)
     input_window.title("Database Connection")
-    input_window.geometry("300x200")
-    input_window.resizable(True, True)
+    input_window.geometry("300x150")  
 
     tk.Label(input_window, text="Enter database name:").pack(pady=5)
-    db_name = tk.Entry(input_window, width=30) 
-    db_name.pack(pady=5)
+    db_name_entry = tk.Entry(input_window, width=30)  
+    db_name_entry.pack(pady=5)
 
     tk.Label(input_window, text="Enter database password:").pack(pady=5)
-    db_password = tk.Entry(input_window, show='*', width=30)  
-    db_password.pack(pady=5)
+    db_password_entry = tk.Entry(input_window, show='*', width=30)  
+    db_password_entry.pack(pady=5)
 
-    if not db_name.get():
-        messagebox.showerror("Error", "Database name cannot be empty.")
-        return
+    def on_connect():
+        """Handle the connection when the button is pressed."""
+        global conn
+        db_name = db_name_entry.get()
+        db_password = db_password_entry.get()
 
-    conn = myvcs.create_connection("localhost", "root", db_password.get(), db_name.get())
+        if not db_name:
+            messagebox.showerror("Error", "Database name cannot be empty.")
+            return
+
+    conn = myvcs.create_connection("localhost", "root", db_password, db_name)
     if conn:
         messagebox.showinfo("Success", "Connected to Database")
         input_window.destroy()
