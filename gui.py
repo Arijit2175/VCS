@@ -14,22 +14,29 @@ def connect_db():
     input_window.resizable(True, True)
 
     tk.Label(input_window, text="Enter database name:").pack(pady=5)
-    db_name_entry = tk.Entry(input_window, width=30) 
-    db_name_entry.pack(pady=5)
+    db_name = tk.Entry(input_window, width=30) 
+    db_name.pack(pady=5)
 
     tk.Label(input_window, text="Enter database password:").pack(pady=5)
-    db_password_entry = tk.Entry(input_window, show='*', width=30)  
-    db_password_entry.pack(pady=5)
+    db_password = tk.Entry(input_window, show='*', width=30)  
+    db_password.pack(pady=5)
 
-    if not db_name:
+    if not db_name.get():
         messagebox.showerror("Error", "Database name cannot be empty.")
         return
 
-    conn = myvcs.create_connection("localhost", "root", db_password, db_name)
+    conn = myvcs.create_connection("localhost", "root", db_password.get(), db_name.get())
     if conn:
         messagebox.showinfo("Success", "Connected to Database")
+        input_window.destroy()
     else:
         messagebox.showerror("Error", "Failed to Connect")
+
+    connect_button = tk.Button(input_window, text="Connect", command=on_connect)
+    connect_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def add_file_ui():
     """Add a file to the VCS."""
