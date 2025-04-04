@@ -8,8 +8,18 @@ def connect_db():
     """Connect to MySQL database."""
     global conn
 
-    db_name = simpledialog.askstring("Input", "Enter database name:")
-    db_password = simpledialog.askstring("Input", "Enter database password:", show='*')
+    input_window = tk.Toplevel(root)
+    input_window.title("Database Connection")
+    input_window.geometry("300x200")
+    input_window.resizable(True, True)
+
+    tk.Label(input_window, text="Enter database name:").pack(pady=5)
+    db_name_entry = tk.Entry(input_window, width=30) 
+    db_name_entry.pack(pady=5)
+
+    tk.Label(input_window, text="Enter database password:").pack(pady=5)
+    db_password_entry = tk.Entry(input_window, show='*', width=30)  
+    db_password_entry.pack(pady=5)
 
     if not db_name:
         messagebox.showerror("Error", "Database name cannot be empty.")
