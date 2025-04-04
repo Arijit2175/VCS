@@ -51,7 +51,7 @@ def add_file_ui():
     
     input_window = tk.Toplevel(root)
     input_window.title("Add File")
-    input_window.geometry("300x220")
+    input_window.geometry("300x240")
 
     tk.Label(input_window, text="Enter file hash:").pack(pady=5)
     file_hash_entry = tk.Entry(input_window, width=30) 
