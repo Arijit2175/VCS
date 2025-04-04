@@ -48,6 +48,18 @@ def add_file_ui():
     if conn is None:
         messagebox.showerror("Error", "No database connection")
         return
+    
+    input_window = tk.Toplevel(root)
+    input_window.title("Add File")
+    input_window.geometry("300x220")
+
+    tk.Label(input_window, text="Enter file hash:").pack(pady=5)
+    file_hash_entry = tk.Entry(input_window, width=30) 
+    file_hash_entry.pack(pady=5)
+
+    tk.Label(input_window, text="Enter file content:").pack(pady=5)
+    content_entry = tk.Text(input_window, width=30, height=5)  
+    content_entry.pack(pady=5)
 
     file_hash = simpledialog.askstring("Input", "Enter file hash:")
     content = simpledialog.askstring("Input", "Enter file content:")
