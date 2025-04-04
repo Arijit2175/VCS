@@ -61,20 +61,30 @@ def add_file_ui():
     content_entry = tk.Text(input_window, width=30, height=5)  
     content_entry.pack(pady=5)
 
-    file_hash = simpledialog.askstring("Input", "Enter file hash:")
-    content = simpledialog.askstring("Input", "Enter file content:")
-    if not file_hash or not content:
-        messagebox.showerror("Error", "File hash and content cannot be empty.")
-        return
+    def on_add_file():
+        """Handle the addition of the file when the button is pressed."""
+        file_hash = file_hash_entry.get()
+        content = content_entry.get("1.0", tk.END).strip()
 
-    try:
-        success = myvcs.add_file(conn, file_hash, content)
-        if success:
-            messagebox.showinfo("Success", "File added successfully!")
-        else:
-            messagebox.showerror("Error", "File with this hash already exists.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to add file: {e}")
+        if not file_hash or not content:
+            messagebox.showerror("Error", "File hash and content cannot be empty.")
+            return
+
+        try:
+            success = myvcs.add_file(conn, file_hash, content)
+            if success:
+                messagebox.showinfo("Success", "File added successfully!")
+                input_window.destroy() 
+            else:
+                messagebox.showerror("Error", "File with this hash already exists.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to add file: {e}")
+    
+    add_button = tk.Button(input_window, text="Add File", command=on_add_file)
+    add_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def create_commit_ui():
     """Create a commit in the VCS."""
