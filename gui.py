@@ -29,13 +29,13 @@ def connect_db():
         if not db_name:
             messagebox.showerror("Error", "Database name cannot be empty.")
             return
-
-    conn = myvcs.create_connection("localhost", "root", db_password, db_name)
-    if conn:
-        messagebox.showinfo("Success", "Connected to Database")
-        input_window.destroy()
-    else:
-        messagebox.showerror("Error", "Failed to Connect")
+        
+        conn = myvcs.create_connection("localhost", "root", db_password, db_name)
+        if conn:
+            messagebox.showinfo("Success", "Connected to Database")
+            input_window.destroy()
+        else:
+            messagebox.showerror("Error", "Failed to Connect")
 
     connect_button = tk.Button(input_window, text="Connect", command=on_connect)
     connect_button.pack(pady=10)
