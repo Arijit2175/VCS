@@ -150,8 +150,17 @@ def create_branch_ui():
         messagebox.showerror("Error", "No database connection")
         return
 
-    branch_name = simpledialog.askstring("Input", "Enter branch name:")
-    latest_commit = simpledialog.askstring("Input", "Enter latest commit hash (or leave blank):")
+    input_window = tk.Toplevel(root)
+    input_window.title("Create Branch")
+    input_window.geometry("400x300")  
+
+    tk.Label(input_window, text="Enter branch name:").pack(pady=5)
+    branch_name_entry = tk.Entry(input_window, width=40)  
+    branch_name_entry.pack(pady=5)
+
+    tk.Label(input_window, text="Enter latest commit hash (or leave blank):").pack(pady=5)
+    latest_commit_entry = tk.Entry(input_window, width=40)  
+    latest_commit_entry.pack(pady=5)
     
     if not branch_name:
         messagebox.showerror("Error", "Branch name cannot be empty.")
