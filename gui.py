@@ -215,27 +215,36 @@ def update_branch_ui():
     tk.Label(input_window, text="Enter new latest commit hash:").pack(pady=5)
     latest_commit_entry = tk.Entry(input_window, width=40)  
     latest_commit_entry.pack(pady=5)
+ 
+    def on_update_branch():
+        """Handle the update of the branch when the button is pressed."""
+        branch_name = branch_name_entry.get().strip()
+        latest_commit = latest_commit_entry.get().strip()
 
-    #branch_name = simpledialog.askstring("Input", "Enter branch name:")
-    #latest_commit = simpledialog.askstring("Input", "Enter new latest commit hash:")
-    
-    if not branch_name or not latest_commit:
-        messagebox.showerror("Error", "Branch name and latest commit cannot be empty.")
-        return
+        if not branch_name or not latest_commit:
+            messagebox.showerror("Error", "Branch name and latest commit cannot be empty.")
+            return
 
-    commit_info = myvcs.get_commit_history(conn, branch_name)  
-    if not commit_info:
-        messagebox.showerror("Error", f"Latest commit '{latest_commit}' does not exist.")
-        return
+        commit_info = myvcs.get_commit_info(conn, latest_commit)  
+        if not commit_info:
+            messagebox.showerror("Error", f"Latest commit '{latest_commit}' does not exist.")
+            return
 
-    try:
-        success = myvcs.update_branch(conn, branch_name, latest_commit)
-        if success:
-            messagebox.showinfo("Success", "Branch updated successfully!")
-        else:
-            messagebox.showerror("Error", "Branch not found.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to update branch: {e}")
+        try:
+            success = myvcs.update_branch(conn, branch_name, latest_commit)
+            if success:
+                messagebox.showinfo("Success", "Branch updated successfully!")
+                input_window.destroy()  
+            else:
+                messagebox.showerror("Error", "Branch not found.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to update branch: {e}")
+
+    update_button = tk.Button(input_window, text="Update Branch", command=on_update_branch)
+    update_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def get_file_by_hash_ui():
     """Retrieve a file from the VCS by its hash and display it in a new window."""
