@@ -397,19 +397,29 @@ def delete_file_ui():
     tk.Label(input_window, text="Enter file hash to delete:").pack(pady=5)
     file_hash_entry = tk.Entry(input_window, width=40) 
     file_hash_entry.pack(pady=5)
-    
-    if not file_hash:
-        messagebox.showerror("Error", "File hash cannot be empty.")
-        return
 
-    try:
-        success = myvcs.delete_file(conn, file_hash)
-        if success:
-            messagebox.showinfo("Success", "File deleted successfully!")
-        else:
-            messagebox.showerror("Error", "File not found.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to delete file: {e}")
+    def on_delete_file():
+        """Handle the deletion of the file when the button is pressed."""
+        file_hash = file_hash_entry.get().strip()
+        if not file_hash:
+            messagebox.showerror("Error", "File hash cannot be empty.")
+            return
+
+        try:
+            success = myvcs.delete_file(conn, file_hash)
+            if success:
+                messagebox.showinfo("Success", "File deleted successfully!")
+                input_window.destroy() 
+            else:
+                messagebox.showerror("Error", "File not found.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to delete file: {e}")
+
+    delete_button = tk.Button(input_window, text="Delete File", command=on_delete_file)
+    delete_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def delete_commit_ui():
     """Delete a commit from the VCS."""
