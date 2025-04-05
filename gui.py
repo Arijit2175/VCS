@@ -112,23 +112,37 @@ def create_commit_ui():
     branch_name_entry = tk.Entry(input_window, width=40)  
     branch_name_entry.pack(pady=5)
     
-    if not commit_hash or not message or not branch_name:
-        messagebox.showerror("Error", "Commit hash, message, and branch name cannot be empty.")
-        return
+    def on_create_commit():
+        """Handle the creation of the commit when the button is pressed."""
+        commit_hash = commit_hash_entry.get()
+        message = message_entry.get("1.0", tk.END).strip()  
+        parent_commit = parent_commit_entry.get()
+        branch_name = branch_name_entry.get()
 
-    branch_info = myvcs.get_branch_info(conn, branch_name)
-    if not branch_info:
-        messagebox.showerror("Error", f"Branch '{branch_name}' does not exist.")
-        return
+        if not commit_hash or not message or not branch_name:
+            messagebox.showerror("Error", "Commit hash, message, and branch name cannot be empty.")
+            return
 
-    try:
-        success = myvcs.create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
-        if success:
-            messagebox.showinfo("Success", "Commit created successfully!")
-        else:
-            messagebox.showerror("Error", "Commit with this hash already exists.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to create commit: {e}")
+        branch_info = myvcs.get_branch_info(conn, branch_name)
+        if not branch_info:
+            messagebox.showerror("Error", f"Branch '{branch_name}' does not exist.")
+            return
+
+        try:
+            success = myvcs.create_commit(conn, commit_hash, message, parent_commit or None, branch_name)
+            if success:
+                messagebox.showinfo("Success", "Commit created successfully!")
+                input_window.destroy()  
+            else:
+                messagebox.showerror("Error", "Commit with this hash already exists.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to create commit: {e}")
+
+    create_button = tk.Button(input_window, text="Create Commit", command=on_create_commit)
+    create_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def create_branch_ui():
     """Create a new branch."""
