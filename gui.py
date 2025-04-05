@@ -464,19 +464,36 @@ def delete_branch_ui():
         messagebox.showerror("Error", "No database connection")
         return
 
-    branch_name = simpledialog.askstring("Input", "Enter branch name to delete:")
-    if not branch_name:
-        messagebox.showerror("Error", "Branch name cannot be empty.")
-        return
+    input_window = tk.Toplevel(root)
+    input_window.title("Delete Branch")
+    input_window.geometry("400x150")  
 
-    try:
-        success = myvcs.delete_branch(conn, branch_name)
-        if success:
-            messagebox.showinfo("Success", f"Branch '{branch_name}' deleted successfully!")
-        else:
-            messagebox.showerror("Error", f"Branch '{branch_name}' not found or has associated commits.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to delete branch: {e}")
+    tk.Label(input_window, text="Enter branch name to delete:").pack(pady=5)
+    branch_name_entry = tk.Entry(input_window, width=40) 
+    branch_name_entry.pack(pady=5)
+
+    def on_delete_branch():
+        """Handle the deletion of the branch when the button is pressed."""
+        branch_name = branch_name_entry.get().strip()
+        if not branch_name:
+            messagebox.showerror("Error", "Branch name cannot be empty.")
+            return
+
+        try:
+            success = myvcs.delete_branch(conn, branch_name)
+            if success:
+                messagebox.showinfo("Success", f"Branch '{branch_name}' deleted successfully!")
+                input_window.destroy()  
+            else:
+                messagebox.showerror("Error", f"Branch '{branch_name}' not found or has associated commits.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to delete branch: {e}")
+
+    delete_button = tk.Button(input_window, text="Delete Branch", command=on_delete_branch)
+    delete_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def merge_branches_ui():
     """Merge two branches in the VCS after validating their existence."""
