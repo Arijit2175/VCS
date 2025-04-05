@@ -162,29 +162,41 @@ def create_branch_ui():
     latest_commit_entry = tk.Entry(input_window, width=40)  
     latest_commit_entry.pack(pady=5)
     
-    if not branch_name:
-        messagebox.showerror("Error", "Branch name cannot be empty.")
-        return
+    def on_create_branch():
+        """Handle the creation of the branch when the button is pressed."""
+        branch_name = branch_name_entry.get()
+        latest_commit = latest_commit_entry.get().strip() 
 
-    existing_branch_info = myvcs.get_branch_info(conn, branch_name)
-    if existing_branch_info:
-        messagebox.showerror("Error", f"Branch '{branch_name}' already exists.")
-        return
-
-    if latest_commit:
-        commit_info = myvcs.get_commit_info(conn, latest_commit)  
-        if not commit_info:
-            messagebox.showerror("Error", f"Latest commit '{latest_commit}' does not exist.")
+        if not branch_name:
+            messagebox.showerror("Error", "Branch name cannot be empty.")
             return
 
-    try:
-        success = myvcs.create_branch(conn, branch_name, latest_commit)
-        if success:
-            messagebox.showinfo("Success", "Branch created successfully!")
-        else:
-            messagebox.showerror("Error", "Failed to create branch.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to create branch: {e}")
+        existing_branch_info = myvcs.get_branch_info(conn, branch_name)
+        if existing_branch_info:
+            messagebox.showerror("Error", f"Branch '{branch_name}' already exists.")
+            return
+
+        if latest_commit:
+            commit_info = myvcs.get_commit_info(conn, latest_commit)  
+            if not commit_info:
+                messagebox.showerror("Error", f"Latest commit '{latest_commit}' does not exist.")
+                return
+
+        try:
+            success = myvcs.create_branch(conn, branch_name, latest_commit)
+            if success:
+                messagebox.showinfo("Success", "Branch created successfully!")
+                input_window.destroy()  
+            else:
+                messagebox.showerror("Error", "Failed to create branch.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to create branch: {e}")
+
+    create_button = tk.Button(input_window, text="Create Branch", command=on_create_branch)
+    create_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def update_branch_ui():
     """Update a branch to a new commit."""
