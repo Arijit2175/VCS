@@ -344,29 +344,45 @@ def get_branch_info_ui():
         messagebox.showerror("Error", "No database connection")
         return
 
-    branch_name = simpledialog.askstring("Input", "Enter branch name:")
-    if not branch_name:
-        messagebox.showerror("Error", "Branch name cannot be empty.")
-        return
+    input_window = tk.Toplevel(root)
+    input_window.title("Get Branch Info")
+    input_window.geometry("400x150") 
 
-    try:
-        info = myvcs.get_branch_info(conn, branch_name)
-        if info:
-            info_str = f"Branch Name: {info[0]}\nLatest Commit: {info[1]}"
+    tk.Label(input_window, text="Enter branch name:").pack(pady=5)
+    branch_name_entry = tk.Entry(input_window, width=40)  
+    branch_name_entry.pack(pady=5)
 
-            info_window = tk.Toplevel(root)
-            info_window.title(f"Branch Info: {branch_name}")
-            info_window.geometry("500x300") 
+    def on_get_branch_info():
+        """Handle the retrieval of branch info when the button is pressed."""
+        branch_name = branch_name_entry.get().strip()
+        if not branch_name:
+            messagebox.showerror("Error", "Branch name cannot be empty.")
+            return
 
-            text_widget = tk.Text(info_window, wrap=tk.WORD)
-            text_widget.insert(tk.END, info_str)
-            text_widget.pack(expand=True, fill=tk.BOTH)
+        try:
+            info = myvcs.get_branch_info(conn, branch_name)
+            if info:
+                info_str = f"Branch Name: {info[0]}\nLatest Commit: {info[1]}"
 
-            text_widget.config(state=tk.DISABLED)
-        else:
-            messagebox.showinfo("Branch Info", "No branch found with that name")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to get branch info: {e}")
+                info_window = tk.Toplevel(root)
+                info_window.title(f"Branch Info: {branch_name}")
+                info_window.geometry("500x300") 
+
+                text_widget = tk.Text(info_window, wrap=tk.WORD)
+                text_widget.insert(tk.END, info_str)
+                text_widget.pack(expand=True, fill=tk.BOTH)
+
+                text_widget.config(state=tk.DISABLED)
+            else:
+                messagebox.showinfo("Branch Info", "No branch found with that name")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to get branch info: {e}")
+
+    get_info_button = tk.Button(input_window, text="Get Branch Info", command=on_get_branch_info)
+    get_info_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def delete_file_ui():
     """Delete a file from the VCS."""
