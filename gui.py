@@ -152,7 +152,7 @@ def create_branch_ui():
 
     input_window = tk.Toplevel(root)
     input_window.title("Create Branch")
-    input_window.geometry("400x300")  
+    input_window.geometry("400x250")  
 
     tk.Label(input_window, text="Enter branch name:").pack(pady=5)
     branch_name_entry = tk.Entry(input_window, width=40)  
