@@ -252,29 +252,45 @@ def get_file_by_hash_ui():
         messagebox.showerror("Error", "No database connection")
         return
 
-    file_hash = simpledialog.askstring("Input", "Enter file hash:")
-    if not file_hash:
-        messagebox.showerror("Error", "File hash cannot be empty.")
-        return
+    input_window = tk.Toplevel(root)
+    input_window.title("Retrieve File by Hash")
+    input_window.geometry("400x150") 
 
-    try:
-        content = myvcs.get_file_by_hash(conn, file_hash)
-        if content:
-            file_content = content[1]  
+    tk.Label(input_window, text="Enter file hash:").pack(pady=5)
+    file_hash_entry = tk.Entry(input_window, width=40) 
+    file_hash_entry.pack(pady=5)
 
-            file_window = tk.Toplevel(root)
-            file_window.title(f"File Content: {file_hash}")
-            file_window.geometry("600x400")  
-            
-            text_widget = tk.Text(file_window, wrap=tk.WORD)
-            text_widget.insert(tk.END, file_content)  
-            text_widget.pack(expand=True, fill=tk.BOTH)
+    def on_retrieve_file():
+        """Handle the retrieval of the file when the button is pressed."""
+        file_hash = file_hash_entry.get().strip()
+        if not file_hash:
+            messagebox.showerror("Error", "File hash cannot be empty.")
+            return
 
-            text_widget.config(state=tk.DISABLED)  
-        else:
-            messagebox.showerror("Error", "File not found")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to retrieve file: {e}")
+        try:
+            content = myvcs.get_file_by_hash(conn, file_hash)
+            if content:
+                file_content = content[1]  
+
+                file_window = tk.Toplevel(root)
+                file_window.title(f"File Content: {file_hash}")
+                file_window.geometry("600x400")  
+                
+                text_widget = tk.Text(file_window, wrap=tk.WORD)
+                text_widget.insert(tk.END, file_content)  
+                text_widget.pack(expand=True, fill=tk.BOTH)
+
+                text_widget.config(state=tk.DISABLED)  
+            else:
+                messagebox.showerror("Error", "File not found")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to retrieve file: {e}")
+
+    retrieve_button = tk.Button(input_window, text="Retrieve File", command=on_retrieve_file)
+    retrieve_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def get_commit_history_ui():
     """Get commit history of a branch and display it in a pop-up window."""
