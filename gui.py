@@ -427,19 +427,36 @@ def delete_commit_ui():
         messagebox.showerror("Error", "No database connection")
         return
 
-    commit_hash = simpledialog.askstring("Input", "Enter commit hash to delete:")
-    if not commit_hash:
-        messagebox.showerror("Error", "Commit hash cannot be empty.")
-        return
+    input_window = tk.Toplevel(root)
+    input_window.title("Delete Commit")
+    input_window.geometry("400x150") 
 
-    try:
-        success = myvcs.delete_commit(conn, commit_hash)
-        if success:
-            messagebox.showinfo("Success", "Commit deleted successfully!")
-        else:
-            messagebox.showerror("Error", "Commit not found.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to delete commit: {e}")
+    tk.Label(input_window, text="Enter commit hash to delete:").pack(pady=5)
+    commit_hash_entry = tk.Entry(input_window, width=40) 
+    commit_hash_entry.pack(pady=5)
+
+    def on_delete_commit():
+        """Handle the deletion of the commit when the button is pressed."""
+        commit_hash = commit_hash_entry.get().strip()
+        if not commit_hash:
+            messagebox.showerror("Error", "Commit hash cannot be empty.")
+            return
+
+        try:
+            success = myvcs.delete_commit(conn, commit_hash)
+            if success:
+                messagebox.showinfo("Success", "Commit deleted successfully!")
+                input_window.destroy()
+            else:
+                messagebox.showerror("Error", "Commit not found.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to delete commit: {e}")
+
+    delete_button = tk.Button(input_window, text="Delete Commit", command=on_delete_commit)
+    delete_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def delete_branch_ui():
     """Delete a branch from the VCS."""
