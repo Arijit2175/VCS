@@ -203,9 +203,21 @@ def update_branch_ui():
     if conn is None:
         messagebox.showerror("Error", "No database connection")
         return
+    
+    input_window = tk.Toplevel(root)
+    input_window.title("Update Branch")
+    input_window.geometry("400x250")  
 
-    branch_name = simpledialog.askstring("Input", "Enter branch name:")
-    latest_commit = simpledialog.askstring("Input", "Enter new latest commit hash:")
+    tk.Label(input_window, text="Enter branch name:").pack(pady=5)
+    branch_name_entry = tk.Entry(input_window, width=40)  
+    branch_name_entry.pack(pady=5)
+
+    tk.Label(input_window, text="Enter new latest commit hash:").pack(pady=5)
+    latest_commit_entry = tk.Entry(input_window, width=40)  
+    latest_commit_entry.pack(pady=5)
+
+    #branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    #latest_commit = simpledialog.askstring("Input", "Enter new latest commit hash:")
     
     if not branch_name or not latest_commit:
         messagebox.showerror("Error", "Branch name and latest commit cannot be empty.")
