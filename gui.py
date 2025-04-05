@@ -390,7 +390,14 @@ def delete_file_ui():
         messagebox.showerror("Error", "No database connection")
         return
 
-    file_hash = simpledialog.askstring("Input", "Enter file hash to delete:")
+    input_window = tk.Toplevel(root)
+    input_window.title("Delete File")
+    input_window.geometry("400x150") 
+
+    tk.Label(input_window, text="Enter file hash to delete:").pack(pady=5)
+    file_hash_entry = tk.Entry(input_window, width=40) 
+    file_hash_entry.pack(pady=5)
+    
     if not file_hash:
         messagebox.showerror("Error", "File hash cannot be empty.")
         return
