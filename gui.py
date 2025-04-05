@@ -92,10 +92,25 @@ def create_commit_ui():
         messagebox.showerror("Error", "No database connection")
         return
 
-    commit_hash = simpledialog.askstring("Input", "Enter commit hash:")
-    message = simpledialog.askstring("Input", "Enter commit message:")
-    parent_commit = simpledialog.askstring("Input", "Enter parent commit (or leave blank):")
-    branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    input_window = tk.Toplevel(root)
+    input_window.title("Create Commit")
+    input_window.geometry("400x300")  
+
+    tk.Label(input_window, text="Enter commit hash:").pack(pady=5)
+    commit_hash_entry = tk.Entry(input_window, width=40)  
+    commit_hash_entry.pack(pady=5)
+
+    tk.Label(input_window, text="Enter commit message:").pack(pady=5)
+    message_entry = tk.Text(input_window, width=40, height=5)  
+    message_entry.pack(pady=5)
+
+    tk.Label(input_window, text="Enter parent commit (or leave blank):").pack(pady=5)
+    parent_commit_entry = tk.Entry(input_window, width=40)  
+    parent_commit_entry.pack(pady=5)
+
+    tk.Label(input_window, text="Enter branch name:").pack(pady=5)
+    branch_name_entry = tk.Entry(input_window, width=40)  
+    branch_name_entry.pack(pady=5)
     
     if not commit_hash or not message or not branch_name:
         messagebox.showerror("Error", "Commit hash, message, and branch name cannot be empty.")
