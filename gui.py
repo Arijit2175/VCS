@@ -298,7 +298,14 @@ def get_commit_history_ui():
         messagebox.showerror("Error", "No database connection")
         return
 
-    branch_name = simpledialog.askstring("Input", "Enter branch name:")
+    input_window = tk.Toplevel(root)
+    input_window.title("Get Commit History")
+    input_window.geometry("400x150")  
+
+    tk.Label(input_window, text="Enter branch name:").pack(pady=5)
+    branch_name_entry = tk.Entry(input_window, width=40)  
+    branch_name_entry.pack(pady=5)
+    
     if not branch_name:
         messagebox.showerror("Error", "Branch name cannot be empty.")
         return
