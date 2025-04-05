@@ -305,29 +305,38 @@ def get_commit_history_ui():
     tk.Label(input_window, text="Enter branch name:").pack(pady=5)
     branch_name_entry = tk.Entry(input_window, width=40)  
     branch_name_entry.pack(pady=5)
-    
-    if not branch_name:
-        messagebox.showerror("Error", "Branch name cannot be empty.")
-        return
 
-    try:
-        history = myvcs.get_commit_history(conn, branch_name)
-        if history:
-            history_str = "\n".join(f"Commit Hash: {commit[0]}, Message: {commit[1]}, Timestamp: {commit[2]}" for commit in history)
+    def on_get_commit_history():
+        """Handle the retrieval of commit history when the button is pressed."""
+        branch_name = branch_name_entry.get().strip()
+        if not branch_name:
+            messagebox.showerror("Error", "Branch name cannot be empty.")
+            return
 
-            history_window = tk.Toplevel(root)
-            history_window.title(f"Commit History: {branch_name}")
-            history_window.geometry("600x400") 
-            
-            text_widget = tk.Text(history_window, wrap=tk.WORD)
-            text_widget.insert(tk.END, history_str)
-            text_widget.pack(expand=True, fill=tk.BOTH)
+        try:
+            history = myvcs.get_commit_history(conn, branch_name)
+            if history:
+                history_str = "\n".join(f"Commit Hash: {commit[0]}, Message: {commit[1]}, Timestamp: {commit[2]}" for commit in history)
 
-            text_widget.config(state=tk.DISABLED)
-        else:
-            messagebox.showinfo("Commit History", "No commits found for this branch")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to get commit history: {e}")
+                history_window = tk.Toplevel(root)
+                history_window.title(f"Commit History: {branch_name}")
+                history_window.geometry("600x400") 
+                
+                text_widget = tk.Text(history_window, wrap=tk.WORD)
+                text_widget.insert(tk.END, history_str)
+                text_widget.pack(expand=True, fill=tk.BOTH)
+
+                text_widget.config(state=tk.DISABLED)
+            else:
+                messagebox.showinfo("Commit History", "No commits found for this branch")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to get commit history: {e}")
+
+    get_history_button = tk.Button(input_window, text="Get Commit History", command=on_get_commit_history)
+    get_history_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def get_branch_info_ui():
     """Get details about a branch and display it in a pop-up window."""
