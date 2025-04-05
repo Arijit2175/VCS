@@ -501,30 +501,51 @@ def merge_branches_ui():
         messagebox.showerror("Error", "No database connection")
         return
 
-    source_branch = simpledialog.askstring("Input", "Enter source branch name:")
-    target_branch = simpledialog.askstring("Input", "Enter target branch name:")
-    
-    if not source_branch or not target_branch:
-        messagebox.showerror("Error", "Both source and target branch names cannot be empty.")
-        return
+    input_window = tk.Toplevel(root)
+    input_window.title("Merge Branches")
+    input_window.geometry("400x200")  
 
-    try:
-        source_info = myvcs.get_branch_info(conn, source_branch)
-        target_info = myvcs.get_branch_info(conn, target_branch)
+    tk.Label(input_window, text="Enter source branch name:").pack(pady=5)
+    source_branch_entry = tk.Entry(input_window, width=40) 
+    source_branch_entry.pack(pady=5)
 
-        if not source_info:
-            messagebox.showerror("Error", f"Source branch '{source_branch}' not found")
+    tk.Label(input_window, text="Enter target branch name:").pack(pady=5)
+    target_branch_entry = tk.Entry(input_window, width=40) 
+    target_branch_entry.pack(pady=5)
+
+    def on_merge_branches():
+        """Handle the merging of branches when the button is pressed."""
+        source_branch = source_branch_entry.get().strip()
+        target_branch = target_branch_entry.get().strip()
+
+        if not source_branch or not target_branch:
+            messagebox.showerror("Error", "Both source and target branch names cannot be empty.")
             return
 
-        if not target_info:
-            messagebox.showerror("Error", f"Target branch '{target_branch}' not found")
-            return
+        try:
+            source_info = myvcs.get_branch_info(conn, source_branch)
+            target_info = myvcs.get_branch_info(conn, target_branch)
 
-        myvcs.merge_branches(conn, source_branch, target_branch)
-        messagebox.showinfo("Success", "Branches merged successfully!")
+            if not source_info:
+                messagebox.showerror("Error", f"Source branch '{source_branch}' not found")
+                return
 
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to merge branches: {e}")
+            if not target_info:
+                messagebox.showerror("Error", f"Target branch '{target_branch}' not found")
+                return
+
+            myvcs.merge_branches(conn, source_branch, target_branch)
+            messagebox.showinfo("Success", "Branches merged successfully!")
+            input_window.destroy()
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to merge branches: {e}")
+
+    merge_button = tk.Button(input_window, text="Merge Branches", command=on_merge_branches)
+    merge_button.pack(pady=10)
+
+    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
+    cancel_button.pack(pady=5)
 
 def close_app():
     """Close the application."""
