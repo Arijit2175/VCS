@@ -94,7 +94,7 @@ def create_commit_ui():
 
     input_window = tk.Toplevel(root)
     input_window.title("Create Commit")
-    input_window.geometry("400x300")  
+    input_window.geometry("400x500")  
 
     tk.Label(input_window, text="Enter commit hash:").pack(pady=5)
     commit_hash_entry = tk.Entry(input_window, width=40)  
