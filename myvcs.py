@@ -92,7 +92,7 @@ def create_branch(conn, branch_name, latest_commit):
             logging.info(f"Branch with name '{branch_name}' already exists. Skipping insert.")
             return False
 
-        if latest_commit is not None and latest_commit != "":
+        if latest_commit: 
             query_commit_check = "SELECT * FROM commits WHERE commit_hash = %s"
             cursor.execute(query_commit_check, (latest_commit,))
             commit_exists = cursor.fetchone()
@@ -103,12 +103,12 @@ def create_branch(conn, branch_name, latest_commit):
 
         query = "INSERT INTO branches (name, latest_commit) VALUES (%s, %s)"
         try:
-            cursor.execute(query, (branch_name, latest_commit))
+            cursor.execute(query, (branch_name, latest_commit)) 
             conn.commit()
-            logging.info("Branch created successfully.")
+            logging.info(f"Branch '{branch_name}' created successfully.")
             return True
         except Error as e:
-            logging.error(f"Error: '{e}'")
+            logging.error(f"Error creating branch '{branch_name}': '{e}'")
             return False
 
 def update_branch(conn, branch_name, latest_commit):
