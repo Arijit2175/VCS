@@ -103,7 +103,7 @@ def create_branch(conn, branch_name, latest_commit):
 
         query = "INSERT INTO branches (name, latest_commit) VALUES (%s, %s)"
         try:
-            cursor.execute(query, (branch_name, latest_commit))
+            cursor.execute(query, (branch_name, latest_commit if latest_commit else None)) 
             conn.commit()
             logging.info(f"Branch '{branch_name}' created successfully.")
             return True
