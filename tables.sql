@@ -31,5 +31,5 @@ alter table commits
 alter table branches
     add constraint fk_branches_latest_commit foreign key (latest_commit) references commits(commit_hash) on delete set null;
 
-CREATE INDEX idx_files_hash ON files(hash);
-CREATE INDEX idx_commits_branch_name ON commits(branch_name);
+create index idx_files_hash on files(hash);
+create index idx_commits_branch_name ON commits(branch_name);
