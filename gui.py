@@ -527,8 +527,8 @@ def merge_branches_ui():
             messagebox.showerror("Error", "Both source and target branch names cannot be empty.")
             return
 
-        if not source_branch.isidentifier() or not target_branch.isidentifier():
-            messagebox.showerror("Error", "Branch names must be valid identifiers.")
+        if not is_valid_branch_name(source_branch) or not is_valid_branch_name(target_branch):
+            messagebox.showerror("Error", "Branch names must be valid identifiers (letters, digits, underscores, and hyphens).")
             return
 
         try:
