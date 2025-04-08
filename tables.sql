@@ -10,13 +10,13 @@ create table if not exists files (
     content text not null
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS commits (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    commit_hash VARCHAR(64) UNIQUE NOT NULL,  
-    message TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    parent_commit VARCHAR(64),  
-    branch_name VARCHAR(50) NOT NULL
+create table if not exists commits (
+    id int auto_increment primary key,
+    commit_hash varchar(64) unique not null,  
+    message text not null,
+    timestamp TIMESTAMP default CURRENT_TIMESTAMP,
+    parent_commit varchar(64),  
+    branch_name varchar(50) not null
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS branches (
