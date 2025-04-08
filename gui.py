@@ -496,6 +496,10 @@ def delete_branch_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+def is_valid_branch_name(branch_name):
+    """Check if the branch name is valid (letters, digits, underscores, and hyphens)."""
+    return re.match(r'^[a-zA-Z0-9_-]+$', branch_name) is not None
+
 def merge_branches_ui():
     """Merge two branches in the VCS after validating their existence."""
     if conn is None:
