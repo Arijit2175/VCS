@@ -289,25 +289,22 @@ def find_common_ancestor(conn, commit_hash1, commit_hash2):
     with conn.cursor() as cursor:
         query = "SELECT parent_commit FROM commits WHERE commit_hash = %s"
         
-        parents1 = [commit_hash1]
-        parents2 = [commit_hash2]
-        
-        while parents1 or parents2:
-            if parents1:
-                cursor.execute(query, (parents1.pop(),))
-                parent1 = cursor.fetchone()
-                if parent1:
-                    parents1.append(parent1[0])
+        visited1 = set()
+        visited2 = set()
 
-            if parents2:
-                cursor.execute(query, (parents2.pop(),))
-                parent2 = cursor.fetchone()
-                if parent2:
-                    parents2.append(parent2[0])
+        while commit_hash1:
+            visited1.add(commit_hash1)
+            cursor.execute(query, (commit_hash1,))
+            parent1 = cursor.fetchone()
+            commit_hash1 = parent1[0] if parent1 else None
 
-            common_ancestors = set(parents1) & set(parents2)
-            if common_ancestors:
-                return common_ancestors.pop()  
+        while commit_hash2:
+            if commit_hash2 in visited1:
+                return commit_hash2  
+            visited2.add(commit_hash2)
+            cursor.execute(query, (commit_hash2,))
+            parent2 = cursor.fetchone()
+            commit_hash2 = parent2[0] if parent2 else None
 
     return None
 
