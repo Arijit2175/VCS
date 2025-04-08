@@ -249,74 +249,72 @@ def delete_branch(conn, branch_name):
             return False
         
 def merge_branches(conn, source_branch, target_branch):
+    source_commit_hash = get_latest_commit_hash(conn, source_branch)
+    target_commit_hash = get_latest_commit_hash(conn, target_branch)
+
+    if not source_commit_hash or not target_commit_hash:
+        logging.warning("One or both branches not found.")
+        return False
+
+    common_ancestor_commit = find_common_ancestor(conn, source_commit_hash, target_commit_hash)
+    if not common_ancestor_commit:
+        logging.warning("No common ancestor found, unable to merge.")
+        return False
+
+    logging.info(f"Common ancestor commit: {common_ancestor_commit}")
+
+    if check_for_conflicts(conn, common_ancestor_commit, source_commit_hash, target_commit_hash):
+        logging.warning("Conflicts detected, need to resolve manually.")
+        return False
+
+    merge_commit_hash = create_merge_commit(conn, source_commit_hash, target_commit_hash, target_branch)
+    logging.info(f"Merge commit created: {merge_commit_hash}")
+
+    update_branch(conn, target_branch, merge_commit_hash)
+    return True
+
+def get_latest_commit_hash(conn, branch_name):
+    """Fetch the latest commit hash for a given branch."""
     with conn.cursor() as cursor:
         query = "SELECT latest_commit FROM branches WHERE name = %s"
-        cursor.execute(query, (source_branch,))
-        source_commit = cursor.fetchone()
-        cursor.execute(query, (target_branch,))
-        target_commit = cursor.fetchone()
-
-        if not source_commit or not target_commit:
-            logging.warning("One or both branches not found.")
-            return False
-
-        source_commit_hash = source_commit[0]
-        target_commit_hash = target_commit[0]
-
-        common_ancestor_commit = find_common_ancestor(conn, source_commit_hash, target_commit_hash)
-
-        if not common_ancestor_commit:
-            logging.warning("No common ancestor found, unable to merge.")
-            return False
-
-        logging.info(f"Common ancestor commit: {common_ancestor_commit}")
-
-        conflicts = check_for_conflicts(conn, common_ancestor_commit, source_commit_hash, target_commit_hash)
-        
-        if conflicts:
-            logging.warning("Conflicts detected, need to resolve manually.")
-            return False
-        
-        merge_commit_hash = create_merge_commit(conn, source_commit_hash, target_commit_hash, target_branch)
-        logging.info(f"Merge commit created: {merge_commit_hash}")
-
-        update_branch(conn, target_branch, merge_commit_hash)
-        
-        return True
+        cursor.execute(query, (branch_name,))
+        result = cursor.fetchone()
+        return result[0] if result else None
 
 def find_common_ancestor(conn, commit_hash1, commit_hash2):
-    """Find the common ancestor of two commits"""
-    with conn.cursor() as cursor:
-        query = "SELECT parent_commit FROM commits WHERE commit_hash = %s"
-        
-        visited1 = set()
-        visited2 = set()
+    """Find the common ancestor of two commits."""
+    visited = set()
+    
+    while commit_hash1:
+        visited.add(commit_hash1)
+        commit_hash1 = get_parent_commit(conn, commit_hash1)
 
-        while commit_hash1:
-            visited1.add(commit_hash1)
-            cursor.execute(query, (commit_hash1,))
-            parent1 = cursor.fetchone()
-            commit_hash1 = parent1[0] if parent1 else None
-
-        while commit_hash2:
-            if commit_hash2 in visited1:
-                return commit_hash2  
-            visited2.add(commit_hash2)
-            cursor.execute(query, (commit_hash2,))
-            parent2 = cursor.fetchone()
-            commit_hash2 = parent2[0] if parent2 else None
+    while commit_hash2:
+        if commit_hash2 in visited:
+            return commit_hash2
+        commit_hash2 = get_parent_commit(conn, commit_hash2)
 
     return None
 
+def get_parent_commit(conn, commit_hash):
+    """Fetch the parent commit for a given commit hash."""
+    with conn.cursor() as cursor:
+        query = "SELECT parent_commit FROM commits WHERE commit_hash = %s"
+        cursor.execute(query, (commit_hash,))
+        parent = cursor.fetchone()
+        return parent[0] if parent else None
+
 def check_for_conflicts(conn, ancestor_commit, source_commit, target_commit):
-    """Check if there are conflicts between source and target commits"""
-    return False
+    """Check if there are conflicts between source and target commits."""
+    return False  
 
 def create_merge_commit(conn, source_commit, target_commit, branch_name):
-    """Create a merge commit"""
+    """Create a merge commit."""
     merge_commit_hash = hashlib.sha256(f"{source_commit}{target_commit}{branch_name}".encode()).hexdigest()
     query = "INSERT INTO commits (commit_hash, message, parent_commit, branch_name) VALUES (%s, %s, %s, %s)"
+    
     with conn.cursor() as cursor:
         cursor.execute(query, (merge_commit_hash, f"Merge {source_commit} into {target_commit}", source_commit, branch_name))
         conn.commit()
+    
     return merge_commit_hash
