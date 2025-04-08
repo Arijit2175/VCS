@@ -24,9 +24,9 @@ create table if not exists branches (
     latest_commit varchar(64)
 ) ENGINE=InnoDB;
 
-ALTER TABLE commits
-    ADD CONSTRAINT fk_commits_parent_commit FOREIGN KEY (parent_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL,
-    ADD CONSTRAINT fk_commits_branch_name FOREIGN KEY (branch_name) REFERENCES branches(name) ON DELETE CASCADE;
+alter table commits
+    add constraint fk_commits_parent_commit foreign key (parent_commit) references commits(commit_hash) on delete set null,
+    add constraint fk_commits_branch_name foreign key (branch_name) references branches(name) on delete cascade;
 
 ALTER TABLE branches
     ADD CONSTRAINT fk_branches_latest_commit FOREIGN KEY (latest_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL;
