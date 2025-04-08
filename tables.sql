@@ -28,8 +28,8 @@ alter table commits
     add constraint fk_commits_parent_commit foreign key (parent_commit) references commits(commit_hash) on delete set null,
     add constraint fk_commits_branch_name foreign key (branch_name) references branches(name) on delete cascade;
 
-ALTER TABLE branches
-    ADD CONSTRAINT fk_branches_latest_commit FOREIGN KEY (latest_commit) REFERENCES commits(commit_hash) ON DELETE SET NULL;
+alter table branches
+    add constraint fk_branches_latest_commit foreign key (latest_commit) references commits(commit_hash) on delete set null;
 
 CREATE INDEX idx_files_hash ON files(hash);
 CREATE INDEX idx_commits_branch_name ON commits(branch_name);
