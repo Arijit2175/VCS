@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 import myvcs  
+import re
 
 conn = None  
 
