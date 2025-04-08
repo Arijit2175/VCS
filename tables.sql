@@ -19,9 +19,9 @@ create table if not exists commits (
     branch_name varchar(50) not null
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS branches (
-    name VARCHAR(50) PRIMARY KEY,
-    latest_commit VARCHAR(64)
+create table if not exists branches (
+    name varchar(50) primary key,
+    latest_commit varchar(64)
 ) ENGINE=InnoDB;
 
 ALTER TABLE commits
