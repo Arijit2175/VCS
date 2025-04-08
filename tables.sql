@@ -1,9 +1,9 @@
 create database if not exists myvcs;
 use myvcs;
 
-DROP TABLE IF EXISTS files;
-DROP TABLE IF EXISTS commits;
-DROP TABLE IF EXISTS branches;
+drop table if exists files;
+drop table if exists commits;
+drop table if exists branches;
 
 CREATE TABLE IF NOT EXISTS files (
     hash VARCHAR(64) PRIMARY KEY,
