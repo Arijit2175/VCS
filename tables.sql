@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS myvcs;
-USE myvcs;
+create database if not exists myvcs;
+use myvcs;
 
 DROP TABLE IF EXISTS files;
 DROP TABLE IF EXISTS commits;
