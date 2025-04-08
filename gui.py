@@ -522,6 +522,10 @@ def merge_branches_ui():
             messagebox.showerror("Error", "Both source and target branch names cannot be empty.")
             return
 
+        if not source_branch.isidentifier() or not target_branch.isidentifier():
+            messagebox.showerror("Error", "Branch names must be valid identifiers.")
+            return
+
         try:
             source_info = myvcs.get_branch_info(conn, source_branch)
             target_info = myvcs.get_branch_info(conn, target_branch)
@@ -534,12 +538,19 @@ def merge_branches_ui():
                 messagebox.showerror("Error", f"Target branch '{target_branch}' not found")
                 return
 
-            myvcs.merge_branches(conn, source_branch, target_branch)
-            messagebox.showinfo("Success", "Branches merged successfully!")
+            merge_success = myvcs.merge_branches(conn, source_branch, target_branch)
+
+            if merge_success:
+                messagebox.showinfo("Success", "Branches merged successfully!")
+                source_branch_entry.delete(0, tk.END)  
+                target_branch_entry.delete(0, tk.END)  
+            else:
+                messagebox.showwarning("Warning", "Merge resulted in conflicts. Please resolve them manually.")
+
             input_window.destroy()
 
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to merge branches: {e}")
+            messagebox.showerror("Error", f"Failed to merge branches: {str(e)}")
 
     merge_button = tk.Button(input_window, text="Merge Branches", command=on_merge_branches)
     merge_button.pack(pady=10)
