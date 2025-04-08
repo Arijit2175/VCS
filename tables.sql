@@ -5,9 +5,9 @@ drop table if exists files;
 drop table if exists commits;
 drop table if exists branches;
 
-CREATE TABLE IF NOT EXISTS files (
-    hash VARCHAR(64) PRIMARY KEY,
-    content TEXT NOT NULL
+create table if not exists files (
+    hash varchar(64) primary key,
+    content text not null
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS commits (
