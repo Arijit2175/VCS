@@ -82,11 +82,13 @@ def create_commit(conn, commit_hash, message, parent_commit, branch_name):
 
             if not update_branch(conn, branch_name, commit_hash):
                 logging.warning(f"Failed to update branch '{branch_name}' with latest commit '{commit_hash}'.")
-            return True
+                return False 
+
+            return True  
         except Error as e:
             logging.error(f"Error creating commit '{commit_hash}': {e}")
             return False
-        
+
 def commit_exists(conn, commit_hash):
     """Check if a commit exists in the commits table."""
     with conn.cursor() as cursor:
