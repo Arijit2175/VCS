@@ -69,20 +69,34 @@ def create_commit(conn, commit_hash, message, parent_commit, branch_name):
         if commit_exists(conn, commit_hash):
             logging.info(f"Commit with hash '{commit_hash}' already exists. Skipping insert.")
             return False
-
+        
         if parent_commit and not commit_exists(conn, parent_commit):
             logging.error(f"Cannot create commit '{commit_hash}': Parent commit '{parent_commit}' does not exist.")
             return False
-
+        
         query = "INSERT INTO commits (commit_hash, message, parent_commit, branch_name) VALUES (%s, %s, %s, %s)"
         try:
             cursor.execute(query, (commit_hash, message, parent_commit, branch_name))
             conn.commit()
             logging.info(f"Commit '{commit_hash}' created successfully.")
-
-            if not update_branch(conn, branch_name, commit_hash):
-                logging.warning(f"Failed to update branch '{branch_name}' with latest commit '{commit_hash}'.")
-            return True
+            
+            cursor.execute("SELECT 1 FROM branches WHERE name = %s", (branch_name,))
+            branch_exists = cursor.fetchone() is not None
+            
+            if not branch_exists:
+                logging.info(f"Branch '{branch_name}' does not exist. Creating it...")
+                if create_branch(conn, branch_name, commit_hash):
+                    logging.info(f"Branch '{branch_name}' created with latest commit '{commit_hash}'.")
+                    return True
+                else:
+                    logging.warning(f"Failed to create branch '{branch_name}'.")
+                    return False
+            else:
+                if update_branch(conn, branch_name, commit_hash):
+                    return True
+                else:
+                    logging.warning(f"Failed to update branch '{branch_name}' with latest commit '{commit_hash}'.")
+                    return False
         except Error as e:
             logging.error(f"Error creating commit '{commit_hash}': {e}")
             return False
