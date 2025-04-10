@@ -2,6 +2,7 @@ import mysql.connector
 from mysql.connector import Error
 import logging
 import hashlib
+from psycopg2 import Error
 
 logging.basicConfig(level=logging.INFO)
 
@@ -81,6 +82,12 @@ def create_commit(conn, commit_hash, message, parent_commit, branch_name):
         except Error as e:
             logging.error(f"Error: '{e}'")
             return False
+        
+def commit_exists(conn, commit_hash):
+    """Check if a commit exists in the commits table."""
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT 1 FROM commits WHERE commit_hash = %s", (commit_hash,))
+        return cursor.fetchone() is not None
         
 def create_branch(conn, branch_name, latest_commit):
     with conn.cursor() as cursor:
