@@ -237,7 +237,7 @@ def update_branch_ui():
                 messagebox.showinfo("Success", "Branch updated successfully!")
                 input_window.destroy()  
             else:
-                messagebox.showerror("Error", "Branch not found.")
+                messagebox.showerror("Error", f"Branch '{branch_name}' not found or update failed.")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to update branch: {e}")
 
