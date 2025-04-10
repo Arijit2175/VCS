@@ -64,23 +64,27 @@ def add_file(conn, file_hash, content):
             return False
 
 def create_commit(conn, commit_hash, message, parent_commit, branch_name):
+    """Create a new commit and update the corresponding branch's latest commit."""
     with conn.cursor() as cursor:
-        query_check = "SELECT * FROM commits WHERE commit_hash = %s"
-        cursor.execute(query_check, (commit_hash,))
-        existing_commit = cursor.fetchone()
+        if commit_exists(conn, commit_hash):
+            logging.info(f"Commit with hash '{commit_hash}' already exists. Skipping insert.")
+            return False
 
-        if existing_commit:
-            logging.info(f"Commit with hash {commit_hash} already exists. Skipping insert.")
+        if parent_commit and not commit_exists(conn, parent_commit):
+            logging.error(f"Cannot create commit '{commit_hash}': Parent commit '{parent_commit}' does not exist.")
             return False
 
         query = "INSERT INTO commits (commit_hash, message, parent_commit, branch_name) VALUES (%s, %s, %s, %s)"
         try:
             cursor.execute(query, (commit_hash, message, parent_commit, branch_name))
             conn.commit()
-            logging.info("Commit created successfully.")
+            logging.info(f"Commit '{commit_hash}' created successfully.")
+
+            if not update_branch(conn, branch_name, commit_hash):
+                logging.warning(f"Failed to update branch '{branch_name}' with latest commit '{commit_hash}'.")
             return True
         except Error as e:
-            logging.error(f"Error: '{e}'")
+            logging.error(f"Error creating commit '{commit_hash}': {e}")
             return False
         
 def commit_exists(conn, commit_hash):
