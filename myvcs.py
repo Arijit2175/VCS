@@ -83,24 +83,25 @@ def create_commit(conn, commit_hash, message, parent_commit, branch_name):
             cursor.execute("SELECT 1 FROM branches WHERE name = %s", (branch_name,))
             branch_exists = cursor.fetchone() is not None
             
-            if not branch_exists:
-                logging.info(f"Branch '{branch_name}' does not exist. Creating it...")
-                if create_branch(conn, branch_name, commit_hash):
-                    logging.info(f"Branch '{branch_name}' created with latest commit '{commit_hash}'.")
-                    return True
-                else:
-                    logging.warning(f"Failed to create branch '{branch_name}'.")
-                    return False
+            if branch_exists:
+                cursor.execute("UPDATE branches SET latest_commit = %s WHERE name = %s", 
+                              (commit_hash, branch_name))
+                conn.commit()
+                logging.info(f"Branch '{branch_name}' updated with latest commit '{commit_hash}'.")
             else:
-                if update_branch(conn, branch_name, commit_hash):
-                    return True
-                else:
-                    logging.warning(f"Failed to update branch '{branch_name}' with latest commit '{commit_hash}'.")
-                    return False
+                cursor.execute("INSERT INTO branches (name, latest_commit) VALUES (%s, %s)", 
+                              (branch_name, commit_hash))
+                conn.commit()
+                logging.info(f"Branch '{branch_name}' created with latest commit '{commit_hash}'.")
+            
+            return True
+            
         except Error as e:
-            logging.error(f"Error creating commit '{commit_hash}': {e}")
+            logging.error(f"Error in commit creation or branch update: {e}")
+            conn.rollback() 
             return False
-        
+
+
 def commit_exists(conn, commit_hash):
     """Check if a commit exists in the commits table."""
     with conn.cursor() as cursor:
