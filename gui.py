@@ -199,54 +199,6 @@ def create_branch_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
-def update_branch_ui():
-    """Update a branch to a new commit."""
-    if conn is None:
-        messagebox.showerror("Error", "No database connection")
-        return
-    
-    input_window = tk.Toplevel(root)
-    input_window.title("Update Branch")
-    input_window.geometry("400x250")  
-
-    tk.Label(input_window, text="Enter branch name:").pack(pady=5)
-    branch_name_entry = tk.Entry(input_window, width=40)  
-    branch_name_entry.pack(pady=5)
-
-    tk.Label(input_window, text="Enter new latest commit hash:").pack(pady=5)
-    latest_commit_entry = tk.Entry(input_window, width=40)  
-    latest_commit_entry.pack(pady=5)
- 
-    def on_update_branch():
-        """Handle the update of the branch when the button is pressed."""
-        branch_name = branch_name_entry.get().strip()
-        latest_commit = latest_commit_entry.get().strip()
-
-        if not branch_name or not latest_commit:
-            messagebox.showerror("Error", "Branch name and latest commit cannot be empty.")
-            return
-
-        commit_info = myvcs.get_commit_info(conn, latest_commit)  
-        if not commit_info:
-            messagebox.showerror("Error", f"Latest commit '{latest_commit}' does not exist.")
-            return
-
-        try:
-            success = myvcs.update_branch(conn, branch_name, latest_commit)
-            if success:
-                messagebox.showinfo("Success", "Branch updated successfully!")
-                input_window.destroy()  
-            else:
-                messagebox.showerror("Error", f"Branch '{branch_name}' not found or update failed.")
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to update branch: {e}")
-
-    update_button = tk.Button(input_window, text="Update Branch", command=on_update_branch)
-    update_button.pack(pady=10)
-
-    cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
-    cancel_button.pack(pady=5)
-
 def get_file_by_hash_ui():
     """Retrieve a file from the VCS by its hash and display it in a new window."""
     if conn is None:
@@ -581,7 +533,6 @@ tk.Button(frame, text="Connect to Database", command=connect_db).pack(fill=tk.X,
 tk.Button(frame, text="Add File", command=add_file_ui).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Create Commit", command=create_commit_ui).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Create Branch", command=create_branch_ui).pack(fill=tk.X, pady=5)
-tk.Button(frame, text="Update Branch", command=update_branch_ui).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Get File by Hash", command=get_file_by_hash_ui).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Get Commit History", command=get_commit_history_ui).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Get Branch Info", command=get_branch_info_ui).pack(fill=tk.X, pady=5)

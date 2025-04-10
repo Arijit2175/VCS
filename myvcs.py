@@ -137,35 +137,6 @@ def create_branch(conn, branch_name, latest_commit):
             logging.error(f"Error creating branch '{branch_name}': '{e}'")
             return False
 
-def update_branch(conn, branch_name, latest_commit):
-    """Update the latest commit for an existing branch."""
-    with conn.cursor() as cursor:
-        try:
-            cursor.execute("SELECT name FROM branches WHERE name = %s", (branch_name,))
-            branch = cursor.fetchone()
-
-            cursor.execute("SELECT commit_hash FROM commits WHERE commit_hash = %s", (latest_commit,))
-            commit = cursor.fetchone()
-
-            print(f"Branch found: {branch is not None}, Commit found: {commit is not None}")
-
-            if branch is None:
-                logging.warning(f"Branch '{branch_name}' does not exist. Update failed.")
-                return False
-
-            if commit is None:
-                logging.warning(f"Commit '{latest_commit}' does not exist. Update failed.")
-                return False
-
-            cursor.execute("UPDATE branches SET latest_commit = %s WHERE name = %s", (latest_commit, branch_name))
-            conn.commit()
-            logging.info(f"Branch '{branch_name}' updated successfully to latest commit '{latest_commit}'.")
-            return True
-
-        except Error as e:
-            logging.error(f"Error updating branch '{branch_name}': {e}")
-            return False
-
 def get_file_by_hash(conn, file_hash):
     with conn.cursor() as cursor:
         query = "SELECT * FROM files WHERE hash = %s"
