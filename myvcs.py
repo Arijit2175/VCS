@@ -123,31 +123,28 @@ def create_branch(conn, branch_name, latest_commit):
             return False
 
 def update_branch(conn, branch_name, latest_commit):
+    """Update the latest commit for an existing branch."""
     with conn.cursor() as cursor:
-        query_check_branch = "SELECT * FROM branches WHERE name = %s"
-        cursor.execute(query_check_branch, (branch_name,))
-        existing_branch = cursor.fetchone()
+        try:
+            cursor.execute("""
+                SELECT b.name, c.commit_hash 
+                FROM branches b 
+                LEFT JOIN commits c ON c.commit_hash = %s 
+                WHERE b.name = %s
+            """, (latest_commit, branch_name))
+            result = cursor.fetchone()
 
-        if existing_branch:
-            query_check_commit = "SELECT * FROM commits WHERE commit_hash = %s"
-            cursor.execute(query_check_commit, (latest_commit,))
-            commit_exists = cursor.fetchone()
-
-            if commit_exists:
-                query_update = "UPDATE branches SET latest_commit = %s WHERE name = %s"
-                try:
-                    cursor.execute(query_update, (latest_commit, branch_name))
-                    conn.commit()
-                    logging.info("Branch updated successfully.")
-                    return True
-                except Error as e:
-                    logging.error(f"Error: '{e}'")
-                    return False
-            else:
-                logging.warning(f"Commit '{latest_commit}' does not exist. Update failed.")
+            if not result:
+                logging.warning(f"Branch '{branch_name}' does not exist or commit '{latest_commit}' does not exist. Update failed.")
                 return False
-        else:
-            logging.warning(f"Branch '{branch_name}' does not exist. Update failed.")
+
+            cursor.execute("UPDATE branches SET latest_commit = %s WHERE name = %s", (latest_commit, branch_name))
+            conn.commit()
+            logging.info(f"Branch '{branch_name}' updated successfully to latest commit '{latest_commit}'.")
+            return True
+
+        except Error as e:
+            logging.error(f"Error updating branch '{branch_name}': {e}")
             return False
 
 def get_file_by_hash(conn, file_hash):
