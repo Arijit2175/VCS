@@ -126,15 +126,13 @@ def update_branch(conn, branch_name, latest_commit):
     """Update the latest commit for an existing branch."""
     with conn.cursor() as cursor:
         try:
-            cursor.execute("""
-                SELECT b.name, c.commit_hash 
-                FROM branches b 
-                LEFT JOIN commits c ON c.commit_hash = %s 
-                WHERE b.name = %s
-            """, (latest_commit, branch_name))
-            result = cursor.fetchone()
+            cursor.execute("SELECT COUNT(*) FROM branches WHERE name = %s", (branch_name,))
+            branch_exists = cursor.fetchone()[0] > 0
 
-            if not result:
+            cursor.execute("SELECT COUNT(*) FROM commits WHERE commit_hash = %s", (latest_commit,))
+            commit_exists = cursor.fetchone()[0] > 0
+
+            if not branch_exists or not commit_exists:
                 logging.warning(f"Branch '{branch_name}' does not exist or commit '{latest_commit}' does not exist. Update failed.")
                 return False
 
