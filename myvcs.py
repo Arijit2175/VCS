@@ -249,6 +249,7 @@ def delete_branch(conn, branch_name):
             return False
         
 def merge_branches(conn, source_branch, target_branch):
+    """Merge source_branch into target_branch."""
     source_commit_hash = get_latest_commit_hash(conn, source_branch)
     target_commit_hash = get_latest_commit_hash(conn, target_branch)
 
@@ -276,10 +277,12 @@ def merge_branches(conn, source_branch, target_branch):
 def get_latest_commit_hash(conn, branch_name):
     """Fetch the latest commit hash for a given branch."""
     with conn.cursor() as cursor:
-        query = "SELECT latest_commit FROM branches WHERE name = %s"
-        cursor.execute(query, (branch_name,))
+        cursor.execute("SELECT latest_commit FROM branches WHERE name = %s", (branch_name,))
         result = cursor.fetchone()
-        return result[0] if result else None
+        if result:
+            return result[0]
+        logging.warning(f"No commit found for branch '{branch_name}'")
+        return None
 
 def find_common_ancestor(conn, commit_hash1, commit_hash2):
     """Find the common ancestor of two commits."""
@@ -299,8 +302,7 @@ def find_common_ancestor(conn, commit_hash1, commit_hash2):
 def get_parent_commit(conn, commit_hash):
     """Fetch the parent commit for a given commit hash."""
     with conn.cursor() as cursor:
-        query = "SELECT parent_commit FROM commits WHERE commit_hash = %s"
-        cursor.execute(query, (commit_hash,))
+        cursor.execute("SELECT parent_commit FROM commits WHERE commit_hash = %s", (commit_hash,))
         parent = cursor.fetchone()
         return parent[0] if parent else None
 
@@ -311,10 +313,20 @@ def check_for_conflicts(conn, ancestor_commit, source_commit, target_commit):
 def create_merge_commit(conn, source_commit, target_commit, branch_name):
     """Create a merge commit."""
     merge_commit_hash = hashlib.sha256(f"{source_commit}{target_commit}{branch_name}".encode()).hexdigest()
-    query = "INSERT INTO commits (commit_hash, message, parent_commit, branch_name) VALUES (%s, %s, %s, %s)"
-    
     with conn.cursor() as cursor:
-        cursor.execute(query, (merge_commit_hash, f"Merge {source_commit} into {target_commit}", source_commit, branch_name))
-        conn.commit()
-    
+        try:
+            cursor.execute(
+                "INSERT INTO commits (commit_hash, message, parent_commit, branch_name) VALUES (%s, %s, %s, %s)",
+                (merge_commit_hash, f"Merge {source_commit} into {target_commit}", source_commit, branch_name)
+            )
+            conn.commit()
+        except Exception as e:
+            logging.error(f"Failed to create merge commit: {e}")
+            return None
     return merge_commit_hash
+
+def update_branch(conn, branch_name, commit_hash):
+    """Update the latest commit for a branch."""
+    with conn.cursor() as cursor:
+        cursor.execute("UPDATE branches SET latest_commit = %s WHERE name = %s", (commit_hash, branch_name))
+        conn.commit()
