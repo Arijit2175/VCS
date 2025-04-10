@@ -127,10 +127,12 @@ def update_branch(conn, branch_name, latest_commit):
     with conn.cursor() as cursor:
         try:
             cursor.execute("SELECT EXISTS(SELECT 1 FROM branches WHERE name = %s)", (branch_name,))
-            branch_exists = cursor.fetchone()[0]
+            branch_exists = cursor.fetchone()[0] == 1  # Ensure it's a boolean
 
             cursor.execute("SELECT EXISTS(SELECT 1 FROM commits WHERE commit_hash = %s)", (latest_commit,))
-            commit_exists = cursor.fetchone()[0]
+            commit_exists = cursor.fetchone()[0] == 1  # Ensure it's a boolean
+
+            print(f"Branch exists: {branch_exists}, Commit exists: {commit_exists}")
 
             if not branch_exists or not commit_exists:
                 logging.warning(f"Branch '{branch_name}' does not exist or commit '{latest_commit}' does not exist. Update failed.")
