@@ -71,3 +71,7 @@ You can check these out for easier understanding and further learning:
 - **Software Design Patterns for Versioning Systems** – https://martinfowler.com/bliki/VersionControl.html  
 - **Designing Git-like Branching in SQL** – https://github.blog/2020-12-17-commits-are-snapshots-not-diffs/  
 - **GitHub Engineering Blog** – https://github.blog/engineering/ 
+
+<br>
+
+**Developed by** - @Arijit2175
