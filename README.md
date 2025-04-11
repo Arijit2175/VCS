@@ -27,8 +27,12 @@ pip install mysql-connector-python
 ### 1. **Connection**
 On launch, the system connects to the MySQL database using provided credentials and ensures that the `main` branch is initialized.
 
+![Connection Flow](assets/connection.png)
+
 ### 2. **Addition of Files**
 Each file is hashed and stored. Duplicate entries are avoided by checking the hash before insertion.
+
+![File Handling](assets/add_file.png)
 
 ### 3. **Committing Changes**
 Each commit includes:
@@ -39,18 +43,26 @@ Each commit includes:
 
 On commit, the `branches` table is updated with the latest commit.
 
+![Commit Workflow](assets/commit.png)
+
 ### 4. **Branch Management**
 - Create branches pointing to a specific commit
 - Update branches as new commits are added
 
+![Branch view](assets/branch.png)
+
 ### 5. **Merging**
 Performs a fast-forward merge when possible. If no common ancestor is found or branches don't exist, it gracefully handles the error.
+
+![Merge Flow](assets/merge.png)
 
 ### 6. **GUI Interface**
 The Tkinter GUI allows users to:
 - Input data for commits, branches, retrieval
 - View output like commit history and file content
 - Get feedback for success or errors in real time
+
+![GUI Preview](assets/gui.png)
 
 ## Applications
 This MySQL version control system can be used in a variety of real-world scenarios, including:
