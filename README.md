@@ -1,28 +1,28 @@
-# VCS Implementation
+# 🔧 VCS Implementation
 
-## Overview 
+## 📄 Overview 
 This project is a **Version Control System (VCS)** tailored for **MySQL databases**. Inspired by Git, it enables commit tracking, branching, and merging directly in a relational environment. It uses a **Python backend** with **MySQL Connector**, and a **Tkinter GUI frontend** for ease of use.
 
-## Inspiration
+## 🌱 Inspiration
 This system is inspired by the core principles of **Git**, reimagined through the lens of SQL. Instead of working with file systems and shell commands, the project reimplements Git logic—**commits**, **branches**, **merges**—as a database-backed version control engine. 
 
 It blends **Python**, **MySQL**, and software design to explore how versioning works under the hood, making it a valuable learning project for developers wanting to deepen their understanding of both databases and DevOps tools.
 
-## Features
+## ✨ Features
 - Create and manage **branches**  
 - Make **commits** with messages and parent tracking  
 - **Merge** branches with basic conflict detection  
 - Retrieve **commit history**, **file contents**, and **branch info**  
 - User-friendly **Tkinter-based GUI**
 
-## Installation
+## 📦 Installation
 Ensure you have python, MySQL and required packages installed.
 Install dependencies with:
 ```
 pip install mysql-connector-python
 ```
 
-## Process Flow
+## 🔁 Process Flow
 
 ### 1. **Connection**
 On launch, the system connects to the MySQL database using provided credentials and ensures that the `main` branch is initialized.
@@ -64,7 +64,7 @@ The Tkinter GUI allows users to:
 
 ![GUI Preview](assets/gui.png)
 
-## Applications
+## 🚀 Applications
 This MySQL version control system can be used in a variety of real-world scenarios, including:
 
 - **Database Change Tracking**: Maintain a history of changes in database records, such as configuration files or stored scripts.
@@ -73,7 +73,7 @@ This MySQL version control system can be used in a variety of real-world scenari
 - **Data Experimentation**: Safely experiment with changes to data or schema, with the ability to revert or merge modifications.
 - **Custom DevOps Pipelines**: Integrate with deployment systems to manage different versions of DB content across environments.
 
-## References
+## 📚 References
 You can check these out for easier understanding and further learning:
 
 - **MySQL Python Connector Docs** – https://dev.mysql.com/doc/connector-python/en/  
@@ -86,4 +86,4 @@ You can check these out for easier understanding and further learning:
 
 <br>
 
-**Developed by** - @Arijit2175
+👨‍💻 **Developed by** - @Arijit2175
