@@ -1,3 +1,4 @@
+#Imported modules required
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 import myvcs  
@@ -5,6 +6,7 @@ import re
 
 conn = None  
 
+#Connection to database
 def connect_db():
     """Connect to MySQL database."""
     global conn
@@ -21,6 +23,7 @@ def connect_db():
     db_password_entry = tk.Entry(input_window, show='*', width=30)  
     db_password_entry.pack(pady=5)
 
+    #Conditions for connection
     def on_connect():
         """Handle the connection when the button is pressed."""
         global conn
@@ -44,6 +47,7 @@ def connect_db():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Addition of files
 def add_file_ui():
     """Add a file to the VCS."""
     if conn is None:
@@ -62,6 +66,7 @@ def add_file_ui():
     content_entry = tk.Text(input_window, width=30, height=5)  
     content_entry.pack(pady=5)
 
+    #Conditions for addition of files
     def on_add_file():
         """Handle the addition of the file when the button is pressed."""
         file_hash = file_hash_entry.get()
@@ -87,6 +92,7 @@ def add_file_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Creation of commits
 def create_commit_ui():
     """Create a commit in the VCS."""
     if conn is None:
@@ -113,6 +119,7 @@ def create_commit_ui():
     branch_name_entry = tk.Entry(input_window, width=40)  
     branch_name_entry.pack(pady=5)
     
+    #Conditions for creation of commits
     def on_create_commit():
         """Handle the creation of the commit when the button is pressed."""
         commit_hash = commit_hash_entry.get()
@@ -145,6 +152,7 @@ def create_commit_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Creation of branches
 def create_branch_ui():
     """Create a new branch."""
     if conn is None:
@@ -163,6 +171,7 @@ def create_branch_ui():
     latest_commit_entry = tk.Entry(input_window, width=40)  
     latest_commit_entry.pack(pady=5)
     
+    #Conditions for creation of branches
     def on_create_branch():
         """Handle the creation of the branch when the button is pressed."""
         branch_name = branch_name_entry.get()
@@ -199,6 +208,7 @@ def create_branch_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Retrieval of file by hash
 def get_file_by_hash_ui():
     """Retrieve a file from the VCS by its hash and display it in a new window."""
     if conn is None:
@@ -213,6 +223,7 @@ def get_file_by_hash_ui():
     file_hash_entry = tk.Entry(input_window, width=40) 
     file_hash_entry.pack(pady=5)
 
+    #Conditions for file by hash fetching
     def on_retrieve_file():
         """Handle the retrieval of the file when the button is pressed."""
         file_hash = file_hash_entry.get().strip()
@@ -245,6 +256,7 @@ def get_file_by_hash_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Retrieval of commit history
 def get_commit_history_ui():
     """Get commit history of a branch and display it in a pop-up window."""
     if conn is None:
@@ -259,6 +271,7 @@ def get_commit_history_ui():
     branch_name_entry = tk.Entry(input_window, width=40)  
     branch_name_entry.pack(pady=5)
 
+    #Conditions for commit history retrieval
     def on_get_commit_history():
         """Handle the retrieval of commit history when the button is pressed."""
         branch_name = branch_name_entry.get().strip()
@@ -291,6 +304,7 @@ def get_commit_history_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Retrieval of branch info
 def get_branch_info_ui():
     """Get details about a branch and display it in a pop-up window."""
     if conn is None:
@@ -305,6 +319,7 @@ def get_branch_info_ui():
     branch_name_entry = tk.Entry(input_window, width=40)  
     branch_name_entry.pack(pady=5)
 
+    #Conditions for retrieval of branch info
     def on_get_branch_info():
         """Handle the retrieval of branch info when the button is pressed."""
         branch_name = branch_name_entry.get().strip()
@@ -337,6 +352,7 @@ def get_branch_info_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Deletion of files
 def delete_file_ui():
     """Delete a file from the VCS."""
     if conn is None:
@@ -351,6 +367,7 @@ def delete_file_ui():
     file_hash_entry = tk.Entry(input_window, width=40) 
     file_hash_entry.pack(pady=5)
 
+    #Conditions for deletion of files
     def on_delete_file():
         """Handle the deletion of the file when the button is pressed."""
         file_hash = file_hash_entry.get().strip()
@@ -374,6 +391,7 @@ def delete_file_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Deletion of commits
 def delete_commit_ui():
     """Delete a commit from the VCS."""
     if conn is None:
@@ -388,6 +406,7 @@ def delete_commit_ui():
     commit_hash_entry = tk.Entry(input_window, width=40) 
     commit_hash_entry.pack(pady=5)
 
+    #Conditions for deletion of commits
     def on_delete_commit():
         """Handle the deletion of the commit when the button is pressed."""
         commit_hash = commit_hash_entry.get().strip()
@@ -411,6 +430,7 @@ def delete_commit_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Deletion of branches
 def delete_branch_ui():
     """Delete a branch from the VCS."""
     if conn is None:
@@ -425,6 +445,7 @@ def delete_branch_ui():
     branch_name_entry = tk.Entry(input_window, width=40) 
     branch_name_entry.pack(pady=5)
 
+    #Conditions for deletions of branches
     def on_delete_branch():
         """Handle the deletion of the branch when the button is pressed."""
         branch_name = branch_name_entry.get().strip()
@@ -448,10 +469,12 @@ def delete_branch_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Checking for valid branch names
 def is_valid_branch_name(branch_name):
     """Check if the branch name is valid (letters, digits, underscores, and hyphens)."""
     return re.match(r'^[a-zA-Z0-9_-]+$', branch_name) is not None
 
+#Merging of branches
 def merge_branches_ui():
     """Merge two branches in the VCS after validating their existence."""
     if conn is None:
@@ -470,6 +493,7 @@ def merge_branches_ui():
     target_branch_entry = tk.Entry(input_window, width=40) 
     target_branch_entry.pack(pady=5)
 
+    #Conditions for merging of branches
     def on_merge_branches():
         """Handle the merging of branches when the button is pressed."""
         source_branch = source_branch_entry.get().strip()
@@ -515,20 +539,24 @@ def merge_branches_ui():
     cancel_button = tk.Button(input_window, text="Cancel", command=input_window.destroy)
     cancel_button.pack(pady=5)
 
+#Exiting the application
 def close_app():
     """Close the application."""
     if conn:
         conn.close()
     root.quit()
 
+#Defining the window size
 root = tk.Tk()
 root.title("MyVCS GUI")
 root.geometry("400x500")
 root.resizable(True, True)
 
+#Defining the frame for the app
 frame = tk.Frame(root, padx=20, pady=10)
 frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
+#Buttons for all the options which can be used
 tk.Button(frame, text="Connect to Database", command=connect_db).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Add File", command=add_file_ui).pack(fill=tk.X, pady=5)
 tk.Button(frame, text="Create Commit", command=create_commit_ui).pack(fill=tk.X, pady=5)
