@@ -571,3 +571,5 @@ tk.Button(frame, text="Delete Branch", command=delete_branch_ui).pack(fill=tk.X,
 tk.Button(frame, text="Exit", command=close_app).pack(fill=tk.X, pady=5)
 
 root.mainloop()
+
+#Ending the code
