@@ -3,6 +3,11 @@
 ## Overview 
 This project is a **Version Control System (VCS)** tailored for **MySQL databases**. Inspired by Git, it enables commit tracking, branching, and merging directly in a relational environment. It uses a **Python backend** with **MySQL Connector**, and a **Tkinter GUI frontend** for ease of use.
 
+## Inspiration
+This system is inspired by the core principles of **Git**, reimagined through the lens of SQL. Instead of working with file systems and shell commands, the project reimplements Git logic—**commits**, **branches**, **merges**—as a database-backed version control engine. 
+
+It blends **Python**, **MySQL**, and software design to explore how versioning works under the hood, making it a valuable learning project for developers wanting to deepen their understanding of both databases and DevOps tools.
+
 ## Features
 - Create and manage **branches**  
 - Make **commits** with messages and parent tracking  
@@ -55,3 +60,4 @@ This MySQL version control system can be used in a variety of real-world scenari
 - **Lightweight Team Collaboration**: Allow multiple developers to simulate Git-like workflows while working directly with SQL databases.
 - **Data Experimentation**: Safely experiment with changes to data or schema, with the ability to revert or merge modifications.
 - **Custom DevOps Pipelines**: Integrate with deployment systems to manage different versions of DB content across environments.
+
