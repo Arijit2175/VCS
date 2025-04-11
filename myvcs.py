@@ -1,3 +1,4 @@
+#Importing the modules required
 import mysql.connector
 from mysql.connector import Error
 import logging
@@ -6,6 +7,7 @@ from psycopg2 import Error
 
 logging.basicConfig(level=logging.INFO)
 
+#Logic for connection to database
 def create_connection(host_name, user_name, user_password, db_name):
     """Create a database connection to a MySQL database."""
     conn = None
@@ -23,6 +25,7 @@ def create_connection(host_name, user_name, user_password, db_name):
         logging.error(f"Error: '{e}'")
     return conn
 
+#Initializing the default branch as main
 def initialize_main_branch(conn):
     with conn.cursor() as cursor:
         query_check = "SELECT * FROM branches WHERE name = 'main'"
@@ -43,6 +46,7 @@ def initialize_main_branch(conn):
             logging.error(f"Error: '{e}'")
             return False
 
+#Logic for addition of files
 def add_file(conn, file_hash, content):
     with conn.cursor() as cursor:
         query_check = "SELECT * FROM files WHERE hash = %s"
@@ -63,6 +67,7 @@ def add_file(conn, file_hash, content):
             logging.error(f"Error: '{e}'")
             return False
 
+#Logic for creation of commits with automated updation
 def create_commit(conn, commit_hash, message, parent_commit, branch_name):
     """Create a new commit and update the corresponding branch's latest commit."""
     with conn.cursor() as cursor:
@@ -101,13 +106,14 @@ def create_commit(conn, commit_hash, message, parent_commit, branch_name):
             conn.rollback() 
             return False
 
-
+#Verification of commit existence
 def commit_exists(conn, commit_hash):
     """Check if a commit exists in the commits table."""
     with conn.cursor() as cursor:
         cursor.execute("SELECT 1 FROM commits WHERE commit_hash = %s", (commit_hash,))
         return cursor.fetchone() is not None
-        
+
+ #Logic for creation of branches       
 def create_branch(conn, branch_name, latest_commit):
     with conn.cursor() as cursor:
         query_check = "SELECT * FROM branches WHERE name = %s"
@@ -137,6 +143,7 @@ def create_branch(conn, branch_name, latest_commit):
             logging.error(f"Error creating branch '{branch_name}': '{e}'")
             return False
 
+#Logic for file retrieval by hash
 def get_file_by_hash(conn, file_hash):
     with conn.cursor() as cursor:
         query = "SELECT * FROM files WHERE hash = %s"
@@ -152,13 +159,15 @@ def get_file_by_hash(conn, file_hash):
         except Error as e:
             logging.error(f"Error: '{e}'")
             return None
-        
+
+#Retrieval of commit info       
 def get_commit_info(conn, commit_hash):
     """Check if a commit exists in the commits table."""
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM commits WHERE commit_hash = %s", (commit_hash,))
     return cursor.fetchone() 
 
+#Logic for retrieval of commit history
 def get_commit_history(conn, branch_name):
     with conn.cursor() as cursor:
         query = "SELECT commit_hash, message, timestamp FROM commits WHERE branch_name = %s ORDER BY timestamp ASC"
@@ -177,6 +186,7 @@ def get_commit_history(conn, branch_name):
             logging.error(f"Error: '{e}'")
             return []
 
+#Logic for retrieval of branch info
 def get_branch_info(conn, branch_name):
     with conn.cursor() as cursor:
         query = "SELECT name, latest_commit FROM branches WHERE name = %s"
@@ -193,6 +203,7 @@ def get_branch_info(conn, branch_name):
             logging.error(f"Error: '{e}'")
             return None
 
+#Logic for deletion of files
 def delete_file(conn, file_hash):
     with conn.cursor() as cursor:
         query = "DELETE FROM files WHERE hash = %s"
@@ -205,6 +216,7 @@ def delete_file(conn, file_hash):
             logging.error(f"Error: '{e}'")
             return False
 
+#Logic for deletion of commits
 def delete_commit(conn, commit_hash):
     with conn.cursor() as cursor:
         query = "DELETE FROM commits WHERE commit_hash = %s"
@@ -217,6 +229,7 @@ def delete_commit(conn, commit_hash):
             logging.error(f"Error: '{e}'")
             return False
 
+#Logic for deletion of branches
 def delete_branch(conn, branch_name):
     """Delete a branch from the database."""
     with conn.cursor() as cursor:
@@ -245,7 +258,8 @@ def delete_branch(conn, branch_name):
         except Error as e:
             logging.error(f"Error: '{e}'")
             return False
-        
+
+#Logic for merging of branches       
 def merge_branches(conn, source_branch, target_branch):
     """Merge source_branch into target_branch."""
     source_commit_hash = get_latest_commit_hash(conn, source_branch)
@@ -272,6 +286,9 @@ def merge_branches(conn, source_branch, target_branch):
     update_branch(conn, target_branch, merge_commit_hash)
     return True
 
+#Functions involved in branch merging
+
+#Fetching the latest commit hash
 def get_latest_commit_hash(conn, branch_name):
     """Fetch the latest commit hash for a given branch."""
     with conn.cursor() as cursor:
@@ -282,6 +299,7 @@ def get_latest_commit_hash(conn, branch_name):
         logging.warning(f"No commit found for branch '{branch_name}'")
         return None
 
+#Finding common ancestor between two commits
 def find_common_ancestor(conn, commit_hash1, commit_hash2):
     """Find the common ancestor of two commits."""
     visited = set()
@@ -297,6 +315,7 @@ def find_common_ancestor(conn, commit_hash1, commit_hash2):
 
     return None
 
+#Retrieval of parent commit
 def get_parent_commit(conn, commit_hash):
     """Fetch the parent commit for a given commit hash."""
     with conn.cursor() as cursor:
@@ -304,10 +323,12 @@ def get_parent_commit(conn, commit_hash):
         parent = cursor.fetchone()
         return parent[0] if parent else None
 
+#Checking for any conflicts
 def check_for_conflicts(conn, ancestor_commit, source_commit, target_commit):
     """Check if there are conflicts between source and target commits."""
     return False  
 
+#Creation of the merged commits
 def create_merge_commit(conn, source_commit, target_commit, branch_name):
     """Create a merge commit."""
     merge_commit_hash = hashlib.sha256(f"{source_commit}{target_commit}{branch_name}".encode()).hexdigest()
@@ -323,6 +344,7 @@ def create_merge_commit(conn, source_commit, target_commit, branch_name):
             return None
     return merge_commit_hash
 
+#Updation of the branch
 def update_branch(conn, branch_name, commit_hash):
     """Update the latest commit for a branch."""
     with conn.cursor() as cursor:
