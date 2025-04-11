@@ -61,3 +61,13 @@ This MySQL version control system can be used in a variety of real-world scenari
 - **Data Experimentation**: Safely experiment with changes to data or schema, with the ability to revert or merge modifications.
 - **Custom DevOps Pipelines**: Integrate with deployment systems to manage different versions of DB content across environments.
 
+## References
+You can check these out for easier understanding and further learning:
+
+- **MySQL Python Connector Docs** – https://dev.mysql.com/doc/connector-python/en/  
+- **Tkinter GUI Guide** – https://docs.python.org/3/library/tkinter.html  
+- **Open-Source Git Internals Book** – https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain   
+- **Hashlib in Python (for content hashing)** – https://docs.python.org/3/library/hashlib.html  
+- **Software Design Patterns for Versioning Systems** – https://martinfowler.com/bliki/VersionControl.html  
+- **Designing Git-like Branching in SQL** – https://github.blog/2020-12-17-commits-are-snapshots-not-diffs/  
+- **GitHub Engineering Blog** – https://github.blog/engineering/ 
