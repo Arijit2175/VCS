@@ -9,3 +9,11 @@ This project is a **Version Control System (VCS)** tailored for **MySQL database
 - **Merge** branches with basic conflict detection  
 - Retrieve **commit history**, **file contents**, and **branch info**  
 - User-friendly **Tkinter-based GUI**
+
+## Installation
+Ensure you have python, MySQL and required packages installed.
+Install dependencies with:
+```
+pip install mysql-connector-python
+```
+
