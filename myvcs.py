@@ -350,3 +350,5 @@ def update_branch(conn, branch_name, commit_hash):
     with conn.cursor() as cursor:
         cursor.execute("UPDATE branches SET latest_commit = %s WHERE name = %s", (commit_hash, branch_name))
         conn.commit()
+
+#Ending the code
